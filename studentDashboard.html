@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | Messify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="mess.css">
+    <style>
+        body { padding-top: 80px; }
+        .hidden { display: none !important; }
+
+        /* ── Welcome Hero ── */
+        .stu-hero {
+            background: linear-gradient(135deg, rgba(255,65,108,0.12) 0%, rgba(255,127,80,0.08) 50%, rgba(79,172,254,0.06) 100%);
+            border: 1px solid rgba(255,65,108,0.18);
+            border-radius: 20px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .stu-hero::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 160px; height: 160px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,65,108,0.12), transparent 70%);
+            pointer-events: none;
+        }
+        .stu-hero-left h2 {
+            margin: 0;
+            font-size: 1.6rem;
+            background: linear-gradient(90deg, #ff416c, #ff9a44);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stu-hero-left p { margin: 0.3rem 0 0; color: var(--text-muted); font-size: 0.9rem; }
+        .stu-hero-right { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+
+        /* ── Quick Stat Pills ── */
+        .stu-stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.8rem;
+        }
+        .stu-stat {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 1.1rem 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .stu-stat::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            border-radius: 14px 14px 0 0;
+        }
+        .stu-stat:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+        .stu-stat.s-blue::before   { background: linear-gradient(90deg,#4facfe,#00f2fe); }
+        .stu-stat.s-pink::before   { background: linear-gradient(90deg,#ff416c,#ff4b2b); }
+        .stu-stat.s-green::before  { background: linear-gradient(90deg,#56ab2f,#a8e063); }
+        .stu-stat.s-gold::before   { background: linear-gradient(90deg,#f7971e,#ffd200); }
+        .stu-stat.s-purple::before { background: linear-gradient(90deg,#834d9b,#d04ed6); }
+        .stu-stat:hover.s-blue   { border-color: rgba(79,172,254,0.3); }
+        .stu-stat:hover.s-pink   { border-color: rgba(255,65,108,0.3); }
+        .stu-stat:hover.s-green  { border-color: rgba(86,171,47,0.3); }
+        .stu-stat:hover.s-gold   { border-color: rgba(247,151,30,0.3); }
+        .stu-stat:hover.s-purple { border-color: rgba(131,77,155,0.3); }
+        .stu-stat-icon {
+            font-size: 1.5rem;
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .s-blue   .stu-stat-icon { background: rgba(79,172,254,0.12); }
+        .s-pink   .stu-stat-icon { background: rgba(255,65,108,0.12); }
+        .s-green  .stu-stat-icon { background: rgba(86,171,47,0.12); }
+        .s-gold   .stu-stat-icon { background: rgba(247,151,30,0.12); }
+        .s-purple .stu-stat-icon { background: rgba(131,77,155,0.12); }
+        .stu-stat-label { font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-muted); margin-bottom: 0.2rem; }
+        .stu-stat-value { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
+
+        /* ── Two-col info row ── */
+        .stu-info-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+        }
+        @media (max-width: 700px) { .stu-info-row { grid-template-columns: 1fr; } }
+        .stu-panel {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 1.4rem 1.6rem;
+        }
+        .stu-panel h4 {
+            margin: 0 0 1rem;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .info-row-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 0.88rem;
+        }
+        .info-row-item:last-child { border-bottom: none; }
+        .info-row-item .irl { color: var(--text-muted); }
+        .info-row-item .irv { font-weight: 600; color: var(--text-main); }
+
+        /* ── Payment Timeline ── */
+        .payment-timeline {
+            display: flex;
+            gap: 0.8rem;
+            margin: 1rem 0 0;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            scrollbar-width: thin;
+        }
+        .cycle-step {
+            min-width: 100px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 12px;
+            padding: 0.9rem 0.7rem;
+            text-align: center;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+        }
+        .cycle-step.paid    { border-color: #28a745; background: rgba(40,167,69,0.1); }
+        .cycle-step.active  { border-color: var(--accent); background: rgba(255,65,108,0.08); }
+        .cycle-step.pending { border-color: #ffc107; background: rgba(255,193,7,0.08); }
+        .cycle-label  { display: block; font-size: 0.72rem; opacity: 0.6; margin-bottom: 0.2rem; }
+        .cycle-number { display: block; font-weight: 700; font-size: 1rem; }
+        .cycle-status { display: block; font-size: 0.68rem; margin-top: 0.4rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .cycle-step.paid   .cycle-status { color: #28a745; }
+        .cycle-step.active .cycle-status { color: var(--accent); }
+        .cycle-step.pending .cycle-status { color: #ffc107; }
+
+        /* ── Payment / Attendance Panels ── */
+        .stu-full-panel {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 1.5rem 1.6rem;
+            margin-bottom: 1.5rem;
+        }
+        .stu-full-panel h4 {
+            margin: 0 0 1rem;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ── History Table ── */
+        .history-table-container { border-radius: 10px; overflow: hidden; margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.07); }
+        .history-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        .history-table thead tr { background: rgba(255,65,108,0.07); }
+        .history-table th { padding: 0.75rem 1rem; text-align: left; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,65,108,0.85); border-bottom: 1px solid rgba(255,65,108,0.12); }
+        .history-table td { padding: 0.75rem 1rem; border-top: 1px solid rgba(255,255,255,0.04); }
+        .history-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+        .cycle-badge { background: rgba(255,65,108,0.12); border: 1px solid rgba(255,65,108,0.25); color: var(--accent); padding: 0.15rem 0.5rem; border-radius: 5px; font-size: 0.75rem; font-weight: 700; font-family: monospace; }
+
+        /* ── Attendance ── */
+        .att-counter-row { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+        .att-counter {
+            flex: 1;
+            min-width: 100px;
+            padding: 0.9rem 1rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+        }
+        .att-counter.present { background: rgba(40,167,69,0.12); border: 1px solid rgba(40,167,69,0.3); color: #4cde7a; }
+        .att-counter.absent  { background: rgba(220,53,69,0.12);  border: 1px solid rgba(220,53,69,0.3);  color: #ff7070; }
+        .att-counter .att-num { font-size: 1.6rem; line-height: 1; }
+        .att-counter .att-lbl { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.75; margin-top: 0.2rem; }
+        .att-mark-panel {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+        .att-date-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+        .att-btn-row { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+        .att-btn {
+            padding: 0.55rem 1.4rem;
+            border-radius: 10px;
+            border: 1px solid;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .att-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+        .att-btn.present { background: rgba(40,167,69,0.15); border-color: #28a745; color: #4cde7a; }
+        .att-btn.absent  { background: rgba(220,53,69,0.15);  border-color: #dc3545; color: #ff7070; }
+        .att-btn.override { font-size: 0.82rem; padding: 0.4rem 1rem; }
+        .att-status-msg {
+            font-weight: 700;
+            font-size: 1rem;
+            margin: 0.2rem 0 0.6rem;
+        }
+        .att-history-list {
+            max-height: 220px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            padding-right: 0.3rem;
+            scrollbar-width: thin;
+        }
+        .att-hist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.65rem 0.9rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            font-size: 0.86rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .att-hist-item .att-date { color: var(--text-muted); }
+        .att-hist-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.15rem 0.6rem;
+            border-radius: 5px;
+        }
+        .att-hist-badge.p { background: rgba(40,167,69,0.15); color: #4cde7a; border: 1px solid rgba(40,167,69,0.25); }
+        .att-hist-badge.a { background: rgba(220,53,69,0.15);  color: #ff7070;  border: 1px solid rgba(220,53,69,0.25); }
+
+        /* ── Payment Action Buttons in sub-panel ── */
+        .pay-action-col { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
+        .msg-banner {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .msg-banner.processing { background: rgba(255,193,7,0.1);  border: 1px solid #ffc107; color: #ffc107; }
+        .msg-banner.rejected   { background: rgba(220,53,69,0.1);   border: 1px solid #dc3545; color: #ff5555; }
+
+        @media (max-width: 600px) {
+            .stu-stats-row { grid-template-columns: 1fr 1fr; }
+            .stu-stat-value { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <nav class="navbar shrink">
+        <div class="logo">
+            <img src="logo.png" alt="Messify Logo" style="height: 50px; width: auto; max-width: 100%;" onerror="this.style.display='none'">
+            <a href="index.html" style="color: inherit; text-decoration: none;">Messify</a>
+        </div>
+        <div class="nav-links">
+            <button class="nav-btn theme-toggle" id="theme-icon" onclick="toggleTheme()">☀️</button>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 2rem;">
+        <div id="dashboard-view">
+
+            <!-- ── Welcome Hero ── -->
+            <div class="stu-hero">
+                <div class="stu-hero-left">
+                    <h2 id="welcome-message">Welcome back! 👋</h2>
+                    <p id="hero-detail">Loading your dashboard...</p>
+                </div>
+                <div class="stu-hero-right">
+                    <button type="button" class="btn-primary" id="apply-leave-btn" onclick="openLeaveModal()" style="background:#17a2b8; border-color:#17a2b8; margin:0;">🛫 Apply Leave</button>
+                    <button type="button" class="btn-primary" id="pay-btn" onclick="openPaymentModal()" style="margin:0;">💳 Renew Payment</button>
+                    <button type="button" class="btn-secondary hidden" id="receipt-btn" onclick="openReceiptModal()" style="margin:0;">🧾 Receipt</button>
+                </div>
+            </div>
+
+            <!-- ── Payment status banners ── -->
+            <div id="processing-msg" class="hidden msg-banner processing" style="margin-bottom:1.2rem;">⏳ Payment Under Processing — Awaiting admin approval</div>
+            <div id="rejected-msg"   class="hidden msg-banner rejected"    style="margin-bottom:1.2rem;">❌ Payment Rejected — <span id="rejection-reason"></span></div>
+
+            <!-- ── Quick Stats Row ── -->
+            <div class="stu-stats-row">
+                <div class="stu-stat s-blue">
+                    <div class="stu-stat-icon">🆔</div>
+                    <div>
+                        <div class="stu-stat-label">Roll No</div>
+                        <div class="stu-stat-value" id="dash-roll">—</div>
+                    </div>
+                </div>
+                <div class="stu-stat s-pink">
+                    <div class="stu-stat-icon">🔁</div>
+                    <div>
+                        <div class="stu-stat-label">Current Cycle</div>
+                        <div class="stu-stat-value" id="dash-cycle">1</div>
+                    </div>
+                </div>
+                <div class="stu-stat s-green">
+                    <div class="stu-stat-icon">📅</div>
+                    <div>
+                        <div class="stu-stat-label">Days Completed</div>
+                        <div class="stu-stat-value" id="dash-days-count">0</div>
+                    </div>
+                </div>
+                <div class="stu-stat s-gold">
+                    <div class="stu-stat-icon">🛫</div>
+                    <div>
+                        <div class="stu-stat-label">Leave Days</div>
+                        <div class="stu-stat-value" id="dash-leave-days">0</div>
+                    </div>
+                </div>
+                <div class="stu-stat s-purple">
+                    <div class="stu-stat-icon">💳</div>
+                    <div>
+                        <div class="stu-stat-label">Pay Status</div>
+                        <div class="stu-stat-value" style="font-size:0.95rem;" id="dash-payment-status">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Profile + Subscription Row ── -->
+            <div class="stu-info-row">
+                <!-- Profile Card -->
+                <div class="stu-panel">
+                    <h4>👤 Profile Info</h4>
+                    <div class="info-row-item"><span class="irl">Name</span>     <span class="irv" id="dash-name">—</span></div>
+                    <div class="info-row-item"><span class="irl">College</span>  <span class="irv" id="dash-branch">—</span></div>
+                    <div class="info-row-item"><span class="irl">Gender</span>   <span class="irv" id="dash-gender">—</span></div>
+                    <div class="info-row-item"><span class="irl">Mess Type</span><span class="irv" id="dash-messtype">—</span></div>
+                </div>
+
+                <!-- Subscription Card -->
+                <div class="stu-panel">
+                    <h4>📦 Subscription</h4>
+                    <div class="info-row-item"><span class="irl">Join Date</span>   <span class="irv" id="dash-joindate">—</span></div>
+                    <div class="info-row-item"><span class="irl">Plan Expiry</span> <span class="irv" id="dash-expiry" style="color:var(--accent);">—</span></div>
+                    <div style="margin-top:1rem;">
+                        <div style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.7px; color:var(--text-muted); margin-bottom:0.5rem;">Payment Timeline</div>
+                        <div class="payment-timeline" id="payment-timeline"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Payment History ── -->
+            <div class="stu-full-panel">
+                <h4>💳 Payment History</h4>
+                <div class="history-table-container">
+                    <table class="history-table">
+                        <thead><tr>
+                            <th>Cycle</th><th>Date</th><th>Amount</th><th>Txn ID</th><th>Status</th>
+                        </tr></thead>
+                        <tbody id="payment-history-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ── Attendance Tracker ── -->
+            <div class="stu-full-panel">
+                <h4>
+                    <span>📊 Attendance Tracker</span>
+                    <div class="att-counter-row">
+                        <div class="att-counter present"><div class="att-num" id="att-present-num">0</div><div class="att-lbl">Present</div></div>
+                        <div class="att-counter absent" ><div class="att-num" id="att-absent-num">0</div><div class="att-lbl">Absent</div></div>
+                    </div>
+                </h4>
+
+                <!-- Hidden compat spans for JS -->
+                <span id="att-present" style="display:none;">Present: 0</span>
+                <span id="att-absent"  style="display:none;">Absent: 0</span>
+
+                <div class="att-mark-panel" id="attendance-action-panel">
+                    <div class="att-date-label">Select Date to Mark Attendance</div>
+                    <input type="date" id="att-date-picker" title="Select attendance date" aria-label="Select attendance date" onchange="handleDateSelectionChange()" style="margin-bottom:0.9rem; padding:0.5rem 0.9rem; border-radius:8px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:var(--text-main); font-family:inherit; font-size:0.9rem; outline:none;">
+                    <!-- Shown when date has NO attendance yet -->
+                    <div class="att-btn-row" id="att-buttons">
+                        <button type="button" class="att-btn present" onclick="markAttendance('Present')">&#9989; Present</button>
+                        <button type="button" class="att-btn absent"  onclick="markAttendance('Absent')">&#10060; Absent</button>
+                    </div>
+                    <!-- Shown when date is already marked -->
+                    <p id="att-marked-msg" class="hidden att-status-msg"></p>
+                    <!-- Override button to change a marked attendance -->
+                    <div id="att-override-buttons" class="hidden att-btn-row" style="margin-top:0.5rem;">
+                        <button type="button" id="att-override-absent-btn"  class="att-btn absent  override" onclick="markAttendance('Absent')">&#10060; Change to Absent</button>
+                        <button type="button" id="att-override-present-btn" class="att-btn present override" onclick="markAttendance('Present')">&#9989; Change to Present</button>
+                    </div>
+                </div>
+
+                <div style="margin-top:0.5rem;">
+                    <div style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.7px; color:var(--text-muted); margin-bottom:0.6rem; padding-bottom:0.4rem; border-bottom:1px solid rgba(255,255,255,0.06);">Recent History</div>
+                    <div class="att-history-list" id="att-history-list"></div>
+                </div>
+            </div>
+
+            <button type="button" class="btn-secondary" onclick="handleLogout()" style="margin-top:1rem; margin-bottom: 2rem;">🚪 Logout</button>
+        </div>
+    </div>
+
+    <!-- Leave Modal -->
+    <div id="leave-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 450px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+                <h3 style="margin:0;">🛫 Apply for Leave</h3>
+                <button onclick="closeLeaveModal()" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">✕</button>
+            </div>
+            
+            <div style="background: rgba(23,162,184,0.1); border: 1px solid #17a2b8; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                <strong>Strict Rules:</strong>
+                <ul style="margin: 0.5rem 0 0 1.2rem; padding: 0;">
+                    <li>Must apply BEFORE leave start date.</li>
+                    <li>Leave must be continuous (min 5 days).</li>
+                    <li>Approved leave extends your plan expiry.</li>
+                </ul>
+            </div>
+
+            <form id="leave-form" onsubmit="handleApplyLeave(event)">
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" id="leave-start" required>
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input type="date" id="leave-end" required>
+                </div>
+                <div id="leave-calc" style="text-align: center; margin: 1rem 0; font-weight: bold; color: var(--accent);">
+                    Total Days: <span id="leave-days-count">0</span>
+                </div>
+                <div class="form-actions" style="justify-content: center; gap: 1rem;">
+                    <button type="submit" class="btn-primary" style="background:#17a2b8; border-color:#17a2b8;">Submit Request</button>
+                    <button type="button" class="btn-secondary" onclick="closeLeaveModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="text-align: center;">
+            <h3>💳 Complete Payment</h3>
+
+            <!-- Step 1: QR code -->
+            <div id="payment-step-qr">
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">Scan the QR code below to pay using PhonePe / UPI</p>
+                <div style="background: white; padding: 1rem; border-radius: 10px; display: inline-block; margin-bottom: 1rem;">
+                    <img src="payment_qr.jpg" alt="PhonePe QR Code" style="width: 200px; height: 200px; object-fit: contain;">
+                </div>
+                <p id="payment-cycle-info" style="font-weight: 600; color: #ffc107; margin-bottom: 0.5rem;">Paying for Cycle <span id="target-cycle">1</span></p>
+                <p style="font-size: 1.2rem; margin-bottom: 1.5rem;">Amount Due: <strong style="color: var(--accent); font-size: 1.5rem;" id="payment-amount">₹0</strong></p>
+                <hr style="border-color: var(--glass-border); margin-bottom: 1.5rem;">
+                <p style="color: var(--accent); font-weight: 600; margin-bottom: 0.5rem;">📸 Upload Payment Screenshot / Proof</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">After paying, take a screenshot and upload it here for admin verification.</p>
+                <div class="form-group" style="text-align: left;">
+                    <label for="payment-proof-upload">Payment Proof (Screenshot)</label>
+                    <input type="file" id="payment-proof-upload" accept="image/*" style="padding: 0.5rem; border: 1px solid var(--glass-border); border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text-main); width: 100%;">
+                </div>
+                <div id="proof-preview-box" class="hidden" style="margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--glass-border);">
+                    <img id="proof-preview-img" src="" alt="Proof preview" style="width: 100%; max-height: 200px; object-fit: contain;">
+                </div>
+                <div class="form-actions modal-actions" style="justify-content: center; margin-top: 1rem;">
+                    <button type="button" class="btn-primary modal-btn" id="submit-proof-btn" onclick="submitPaymentProof()">Submit for Approval</button>
+                    <button type="button" class="btn-secondary modal-btn" onclick="closePaymentModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="receipt-modal" class="modal-overlay hidden">
+        <div class="modal-content receipt-content" style="background: white; color: black !important; max-width: 400px; text-align: left; position: relative; border-radius: 0;">
+            <div class="receipt-header" style="text-align: center; border-bottom: 2px dashed #ccc; padding-bottom: 1rem; margin-bottom: 1rem;">
+                <h2 style="color: black; margin-bottom: 0.5rem;">Messify</h2>
+                <p style="color: #666; font-size: 0.9rem; margin: 0;">Payment Receipt</p>
+            </div>
+            <div class="receipt-body" style="font-family: monospace; font-size: 1.1rem; line-height: 1.8;">
+                <p><strong>Date:</strong> <span id="rec-date"></span></p>
+                <p><strong>Txn ID:</strong> <span id="rec-txn"></span></p>
+                <p><strong>Name:</strong> <span id="rec-name"></span></p>
+                <p><strong>Roll No:</strong> <span id="rec-roll"></span></p>
+                <div style="border-top: 1px solid #eee; margin: 1rem 0;"></div>
+                <div style="display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: bold;">
+                    <span>TOTAL PAID</span>
+                    <span id="rec-amount"></span>
+                </div>
+            </div>
+            <div class="form-actions modal-actions no-print" style="justify-content: center; margin-top: 2rem;">
+                <button type="button" class="btn-primary modal-btn" onclick="printReceipt()">Print / Save PDF</button>
+                <button type="button" class="btn-secondary modal-btn" onclick="closeReceiptModal()" style="color: white; background: #333;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = (window.location.protocol === 'file:' || window.location.port === '5500') 
+            ? 'http://localhost:3000' 
+            : '';
+
+
+        let currentStudentForPayment = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const stored = sessionStorage.getItem('currentStudent');
+            if (!stored) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Load cached data first for instant render
+            let student = JSON.parse(stored);
+            populateDashboard(student);
+
+            // Then fetch fresh data from server — this triggers auto-attendance:
+            // • Today → Present (if not already set)
+            // • Today → Absent (if student has an active approved leave)
+            try {
+                const res = await fetch(`${API_BASE}/student/${student.id}`);
+                if (res.ok) {
+                    const freshStudent = await res.json();
+                    // Merge fresh data and update UI
+                    student = freshStudent;
+                    sessionStorage.setItem('currentStudent', JSON.stringify(freshStudent));
+                    populateDashboard(freshStudent);
+                }
+            } catch (e) {
+                console.warn('⚠️ Could not fetch fresh student data — using cached version.', e);
+            }
+        });
+
+        function populateDashboard(student) {
+            currentStudentForPayment = student;
+
+            document.getElementById('dash-roll').innerText       = student.roll || 'N/A';
+            document.getElementById('dash-name').innerText       = student.name || 'Student';
+            document.getElementById('dash-branch').innerText     = student.branch || 'N/A';
+            document.getElementById('dash-gender').innerText     = student.gender || 'Not specified';
+            document.getElementById('dash-messtype').innerText   = student.messType || 'Not specified';
+            document.getElementById('dash-joindate').innerText   = student.joinDate || 'N/A';
+            document.getElementById('dash-expiry').innerText     = student.planExpiry || 'N/A';
+            document.getElementById('dash-leave-days').innerText = student.totalLeaveDays || 0;
+            document.getElementById('dash-days-count').innerText = student.totalDaysCompleted || 0;
+            document.getElementById('dash-cycle').innerText      = student.currentCycle || 1;
+
+            const firstName = student.name ? student.name.split(' ')[0] : (student.loginId || 'Student');
+            document.getElementById('welcome-message').innerText = `Welcome back, ${firstName}! 👋`;
+            document.getElementById('hero-detail').innerText =
+                `Roll #${student.roll || 'N/A'} • ${student.branch || ''} • ${student.messType || ''} Mess`;
+
+            updateDashboardSubscriptionUI(student);
+            renderAttendanceUI(student);
+            renderLeaveHistory(student);
+            renderPaymentTimeline(student);
+            renderPaymentHistory(student);
+
+            // Expiry Reminder
+            if (student.planExpiry) {
+                const expiry = new Date(student.planExpiry);
+                const now = new Date();
+                const diff = (expiry - now) / (1000 * 60 * 60 * 24);
+                if (diff > 0 && diff <= 2) {
+                    alert(`⚠️ Reminder: Your mess plan is expiring on ${student.planExpiry}. Please renew soon!`);
+                }
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const icon = document.getElementById('theme-icon');
+            if (document.body.classList.contains('dark-theme')) {
+                icon.innerText = '☀️';
+            } else {
+                icon.innerText = '🌙';
+            }
+        }
+
+        function handleLogout() {
+            sessionStorage.removeItem('currentStudent');
+            window.location.href = 'index.html';
+        }
+
+        function updateDashboardSubscriptionUI(student) {
+            const status = student.paymentStatus || 'Pending';
+            const statusStat = document.getElementById('dash-payment-status');
+            statusStat.innerText = status;
+
+            const payBtn        = document.getElementById('pay-btn');
+            const receiptBtn    = document.getElementById('receipt-btn');
+            const processingMsg = document.getElementById('processing-msg');
+            const rejectedMsg   = document.getElementById('rejected-msg');
+
+            // Reset all
+            payBtn.classList.add('hidden');
+            receiptBtn.classList.add('hidden');
+            processingMsg.classList.add('hidden');
+            rejectedMsg.classList.add('hidden');
+
+            if (status === 'Paid') {
+                receiptBtn.classList.remove('hidden');
+            } else if (status === 'Pending Approval') {
+                processingMsg.classList.remove('hidden');
+            } else if (status === 'Rejected') {
+                rejectedMsg.classList.remove('hidden');
+                document.getElementById('rejection-reason').innerText = student.rejectionReason || 'Payment was rejected.';
+                payBtn.classList.remove('hidden');
+            } else {
+                payBtn.classList.remove('hidden');
+            }
+        }
+
+        function renderPaymentTimeline(student) {
+            const timeline = document.getElementById('payment-timeline');
+            timeline.innerHTML = '';
+            
+            const currentCycle = student.currentCycle || 1;
+            // Show at least currentCycle + 1
+            const maxToShow = Math.max(currentCycle + 1, 4);
+            
+            for (let i = 1; i <= maxToShow; i++) {
+                const isPaid = student.payments && student.payments.some(p => p.cycle === i && p.status === 'Paid');
+                const isPendingApproval = student.paymentStatus === 'Pending Approval' && student.pendingCycle === i;
+                const isActive = i === currentCycle;
+                
+                let statusText = 'Upcoming';
+                let statusClass = '';
+                
+                if (isPaid) {
+                    statusText = 'Paid';
+                    statusClass = 'paid';
+                } else if (isPendingApproval) {
+                    statusText = 'Pending Approval';
+                    statusClass = 'pending';
+                } else if (isActive) {
+                    statusText = 'Due';
+                    statusClass = 'active';
+                }
+
+                const step = document.createElement('div');
+                step.className = `cycle-step ${statusClass}`;
+                step.innerHTML = `
+                    <span class="cycle-label">Cycle</span>
+                    <span class="cycle-number">${i}</span>
+                    <span class="cycle-status">${statusText}</span>
+                `;
+                timeline.appendChild(step);
+            }
+        }
+
+        function renderPaymentHistory(student) {
+            const body = document.getElementById('payment-history-body');
+            body.innerHTML = '';
+            
+            if (!student.payments || student.payments.length === 0) {
+                body.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 2rem; opacity: 0.5;">No payment records yet.</td></tr>';
+                return;
+            }
+
+            // Sort by cycle descending
+            const sortedPayments = [...student.payments].sort((a,b) => b.cycle - a.cycle);
+            
+            sortedPayments.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="cycle-badge">C${p.cycle}</span></td>
+                    <td>${p.paidAt || 'N/A'}</td>
+                    <td>₹${p.amount}</td>
+                    <td style="font-family: monospace; font-size: 0.8rem; opacity: 0.7;">${p.txnId || 'N/A'}</td>
+                    <td><span class="badge success">${p.status}</span></td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function openPaymentModal() {
+            if(!currentStudentForPayment) return;
+            
+            // Logic: Pay for the current unpaid cycle
+            const currentCycle = currentStudentForPayment.currentCycle || 1;
+            const latestPaidCycle = (currentStudentForPayment.payments || [])
+                .filter(p => p.status === 'Paid')
+                .reduce((max, p) => Math.max(max, p.cycle), 0);
+            
+            const cycleToPay = Math.max(currentCycle, latestPaidCycle + 1);
+            
+            document.getElementById('target-cycle').innerText = cycleToPay;
+            document.getElementById('payment-amount').innerText = currentStudentForPayment.totalCalculatedFee || '₹3000';
+            
+            // Reset proof upload
+            document.getElementById('payment-proof-upload').value = '';
+            document.getElementById('proof-preview-box').classList.add('hidden');
+            document.getElementById('proof-preview-img').src = '';
+            document.getElementById('payment-modal').classList.remove('hidden');
+
+            // Wire up file preview
+            document.getElementById('payment-proof-upload').onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    document.getElementById('proof-preview-img').src = ev.target.result;
+                    document.getElementById('proof-preview-box').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            };
+        }
+
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.add('hidden');
+        }
+
+        async function submitPaymentProof() {
+            const fileInput = document.getElementById('payment-proof-upload');
+            const targetCycle = parseInt(document.getElementById('target-cycle').innerText);
+            
+            if (!fileInput.files || !fileInput.files[0]) {
+                alert('⚠️ Please select your payment screenshot first.');
+                return;
+            }
+
+            const btn = document.getElementById('submit-proof-btn');
+            btn.innerText = 'Submitting...';
+            btn.disabled = true;
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = async function(ev) {
+                const base64 = ev.target.result;
+                try {
+                    const response = await fetch(`${API_BASE}/submit-payment-proof`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            id: currentStudentForPayment.id, 
+                            paymentProof: base64,
+                            cycle: targetCycle
+                        })
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        currentStudentForPayment = { ...currentStudentForPayment, ...result.student };
+                        sessionStorage.setItem('currentStudent', JSON.stringify(currentStudentForPayment));
+                        updateDashboardSubscriptionUI(currentStudentForPayment);
+                        renderPaymentTimeline(currentStudentForPayment);
+                        renderPaymentHistory(currentStudentForPayment);
+                        closePaymentModal();
+                        alert(`✅ Payment proof submitted for Cycle ${targetCycle}! Awaiting admin approval.`);
+                    } else {
+                        alert('❌ ' + result.message);
+                    }
+                } catch(e) {
+                    console.error(e);
+                    alert('⚠️ Network error. Could not submit proof.');
+                } finally {
+                    btn.innerText = 'Submit for Approval';
+                    btn.disabled = false;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openReceiptModal() {
+            if(!currentStudentForPayment) return;
+            document.getElementById('rec-date').innerText = currentStudentForPayment.paymentDate || new Date().toLocaleString();
+            document.getElementById('rec-txn').innerText = currentStudentForPayment.txnId || 'N/A';
+            document.getElementById('rec-name').innerText = currentStudentForPayment.name || 'Student';
+            document.getElementById('rec-roll').innerText = currentStudentForPayment.roll || 'N/A';
+            document.getElementById('rec-amount').innerText = currentStudentForPayment.totalCalculatedFee || '₹0';
+            
+            document.getElementById('receipt-modal').classList.remove('hidden');
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receipt-modal').classList.add('hidden');
+        }
+
+        function printReceipt() {
+            window.print();
+        }
+
+        function getAttCount(student, status) {
+            if(!student || !student.attendance) return 0;
+            return Object.values(student.attendance).filter(v => v === status).length;
+        }
+
+        function renderAttendanceUI(student) {
+            if(!student) return;
+            if(!student.attendance) student.attendance = {};
+
+            const presentCount = getAttCount(student, 'Present');
+            const absentCount  = getAttCount(student, 'Absent');
+
+            // Update new premium counters
+            const pNum = document.getElementById('att-present-num');
+            const aNum = document.getElementById('att-absent-num');
+            if (pNum) pNum.innerText = presentCount;
+            if (aNum) aNum.innerText = absentCount;
+
+            // Keep hidden compat spans in sync for any legacy code
+            document.getElementById('att-present').innerText = `Present: ${presentCount}`;
+            document.getElementById('att-absent').innerText  = `Absent: ${absentCount}`;
+
+            const datePicker = document.getElementById('att-date-picker');
+            if (!datePicker.value) {
+                const localDate = new Date();
+                localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
+                datePicker.value = localDate.toISOString().split('T')[0];
+            }
+
+            handleDateSelectionChange();
+
+            const historyList = document.getElementById('att-history-list');
+            historyList.innerHTML = '';
+
+            const sortedDates = Object.keys(student.attendance).sort((a,b) => new Date(b) - new Date(a));
+
+            if (sortedDates.length === 0) {
+                historyList.innerHTML = '<p style="color:#aaa; text-align:center; padding:1.2rem 0;">No attendance records yet.</p>';
+            } else {
+                sortedDates.forEach(date => {
+                    const status = student.attendance[date];
+                    const isPresent = status === 'Present';
+                    const div = document.createElement('div');
+                    div.className = 'att-hist-item';
+                    div.innerHTML = `
+                        <span class="att-date">${date}</span>
+                        <span class="att-hist-badge ${isPresent ? 'p' : 'a'}">${isPresent ? '\u2705 Present' : '\u274c Absent'}</span>
+                    `;
+                    historyList.appendChild(div);
+                });
+            }
+        }
+
+        function handleDateSelectionChange() {
+            if(!currentStudentForPayment) return;
+            const student = currentStudentForPayment;
+            const datePickerVal = document.getElementById('att-date-picker').value;
+            if(!datePickerVal) return;
+
+            const attButtons      = document.getElementById('att-buttons');
+            const attMsg          = document.getElementById('att-marked-msg');
+            const overrideBtns    = document.getElementById('att-override-buttons');
+            const overrideAbsent  = document.getElementById('att-override-absent-btn');
+            const overridePresent = document.getElementById('att-override-present-btn');
+
+            // Today in local YYYY-MM-DD
+            const localToday = new Date();
+            localToday.setMinutes(localToday.getMinutes() - localToday.getTimezoneOffset());
+            const todayStr = localToday.toISOString().split('T')[0];
+
+            if (student.attendance && student.attendance[datePickerVal]) {
+                // Date is already marked — hide the primary buttons
+                attButtons.classList.add('hidden');
+                attMsg.classList.remove('hidden');
+                overrideBtns.style.display = 'flex'; // make visible
+                overrideBtns.classList.remove('hidden');
+
+                const markedStatus = student.attendance[datePickerVal];
+                const isToday = datePickerVal === todayStr;
+
+                // Check if this date is within an approved leave period
+                const onLeave = (student.leaveHistory || []).some(l => {
+                    if (l.status !== 'Approved') return false;
+                    return datePickerVal >= l.startDate && datePickerVal <= l.endDate;
+                });
+
+                // Build status message
+                let msgText = `${markedStatus === 'Present' ? '✅' : '❌'} ${datePickerVal}: ${markedStatus}`;
+                if (isToday && markedStatus === 'Present') {
+                    msgText += ' (Auto-marked)';
+                } else if (onLeave && markedStatus === 'Absent') {
+                    msgText = `🛫 ${datePickerVal}: Absent — On Approved Leave`;
+                }
+                attMsg.innerText = msgText;
+                attMsg.style.color = markedStatus === 'Present' ? '#28a745' : '#dc3545';
+
+                // Show only the relevant override button
+                if (onLeave && markedStatus === 'Absent') {
+                    // Leave-based absence — don't allow override
+                    overrideBtns.classList.add('hidden');
+                    overrideBtns.style.display = 'none';
+                } else if (markedStatus === 'Present') {
+                    // Currently Present → allow marking Absent
+                    overrideAbsent.classList.remove('hidden');
+                    overridePresent.classList.add('hidden');
+                } else {
+                    // Currently Absent → allow marking Present
+                    overridePresent.classList.remove('hidden');
+                    overrideAbsent.classList.add('hidden');
+                }
+            } else {
+                // Not marked yet — show the primary Present/Absent buttons
+                attButtons.classList.remove('hidden');
+                attMsg.classList.add('hidden');
+                overrideBtns.classList.add('hidden');
+                overrideBtns.style.display = 'none';
+            }
+        }
+
+        async function markAttendance(status) {
+            if(!currentStudentForPayment) return;
+            
+            const datePickerVal = document.getElementById('att-date-picker').value;
+            if(!datePickerVal) {
+                alert("Please select a valid date first.");
+                return;
+            }
+            
+            if(!currentStudentForPayment.attendance) currentStudentForPayment.attendance = {};
+            currentStudentForPayment.attendance[datePickerVal] = status;
+            
+            renderAttendanceUI(currentStudentForPayment);
+            sessionStorage.setItem('currentStudent', JSON.stringify(currentStudentForPayment));
+            
+            const payload = {
+                id: currentStudentForPayment.id,
+                attendance: currentStudentForPayment.attendance
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/update-student`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if(!response.ok) throw new Error("Server error");
+            } catch(e) {
+                console.error(e);
+                alert("⚠️ Error saving attendance.");
+                delete currentStudentForPayment.attendance[datePickerVal];
+                renderAttendanceUI(currentStudentForPayment);
+                sessionStorage.setItem('currentStudent', JSON.stringify(currentStudentForPayment));
+            }
+        }
+
+        // ---- LEAVE SYSTEM ----
+        function openLeaveModal() {
+            document.getElementById('leave-modal').classList.remove('hidden');
+        }
+        function closeLeaveModal() {
+            document.getElementById('leave-modal').classList.add('hidden');
+        }
+
+        document.getElementById('leave-start').addEventListener('change', calcLeaveDays);
+        document.getElementById('leave-end').addEventListener('change', calcLeaveDays);
+
+        function calcLeaveDays() {
+            const start = new Date(document.getElementById('leave-start').value);
+            const end = new Date(document.getElementById('leave-end').value);
+            if (start && end && end >= start) {
+                const diff = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                document.getElementById('leave-days-count').innerText = diff;
+            } else {
+                document.getElementById('leave-days-count').innerText = '0';
+            }
+        }
+
+        async function handleApplyLeave(event) {
+            event.preventDefault();
+            const startDate = document.getElementById('leave-start').value;
+            const endDate = document.getElementById('leave-end').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/apply-leave`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: currentStudentForPayment.id, startDate, endDate })
+                });
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert(`✅ ${result.message}\nAdded ${result.extension} days to your plan.`);
+                    currentStudentForPayment = result.student;
+                    sessionStorage.setItem('currentStudent', JSON.stringify(result.student));
+                    location.reload(); // Refresh UI
+                } else {
+                    alert(`❌ ${result.message}`);
+                }
+            } catch(e) {
+                alert("⚠️ Request failed. Server issue.");
+            }
+        }
+
+        function renderLeaveHistory(student) {
+            // Optional: You could add a list to show history if desired
+            console.log("Leave History:", student.leaveHistory);
+        }
+    </script>
+    <!-- ===== WHATSAPP ORDER BUTTON ===== -->
+    <style>
+        .wa-float-btn {
+            position: fixed;
+            bottom: 6.5rem; /* Consistent placement across pages */
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #25D366;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+            z-index: 9996;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: wa-pulse 2s infinite;
+        }
+        .wa-float-btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.6);
+            color: #fff;
+        }
+        .wa-tooltip-text {
+            position: absolute;
+            right: 75px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #11111a;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(37,211,102,0.3);
+            font-size: 0.85rem;
+            font-weight: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .wa-float-btn:hover .wa-tooltip-text {
+            opacity: 1;
+            transform: translateY(-50%) translateX(-5px);
+        }
+        @keyframes wa-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+        @media (max-width: 480px) {
+            .wa-float-btn {
+                bottom: 5.5rem;
+                right: 1.2rem;
+                width: 55px;height: 55px;
+            }
+            .wa-tooltip-text { display: none; }
+        }
+    </style>
+    <a href="https://wa.me/917620680450?text=Hi%2C%20I%20want%20to%3A%0A1.%20See%20mess%20plans%0A2.%20Order%20today%E2%80%99s%20food%0A3.%20Monthly%20tiffin%0APlease%20help." 
+       class="wa-float-btn" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       title="Order Now on WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="32" height="32" fill="currentColor">
+            <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157.1zM223.9 414.7c-33 0-65.3-8.9-93.6-25.7l-6.7-4-69.5 18.2 18.5-67.7-4.4-7c-18.4-29.3-28.1-63.5-28.1-98.5 0-101.9 83-184.9 184.9-184.9 49.3 0 95.8 19.3 130.8 54.2 34.8 35 54 81.3 54 130.8 0 102.1-83.3 184.6-184.9 184.6zM324.8 276.7c-5.5-2.8-32.8-16.2-37.9-18.1-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18.1-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-2.1-3.6 2.1-3.6 7.4-14 2.8-5.6 1.4-10.4-.5-13.4-1.9-3.2-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+        </svg>
+        <span class="wa-tooltip-text">Order Now on WhatsApp</span>
+    </a>
+</body>
+</html>

@@ -1,0 +1,2340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Messify — Smart student mess management portal. View daily menu, register, track attendance, pay fees and give feedback online.">
+    <title>Messify — Smart Mess Management</title>
+    <link rel="stylesheet" href="mess.css">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="bg-aurora"></div>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="logo.png" alt="Messify Logo" class="nav-logo">
+            Mess<span>ify</span>
+        </div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#info">Information</a>
+            <a href="#dashboard-section">Dashboard</a>
+            <a href="#menu">Menu</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#register">Register</a>
+        </div>
+    </nav>
+
+    <!-- HEADER / HERO -->
+    <header id="home" class="hero">
+
+        <!-- Floating Food Orbs -->
+        <div class="hero-float-ring" aria-hidden="true">
+            <span class="hero-orb" style="--i:0;">🍛</span>
+            <span class="hero-orb" style="--i:1;">🥗</span>
+            <span class="hero-orb" style="--i:2;">🍱</span>
+            <span class="hero-orb" style="--i:3;">🍚</span>
+            <span class="hero-orb" style="--i:4;">🥘</span>
+            <span class="hero-orb" style="--i:5;">🍲</span>
+        </div>
+
+        <!-- Main Content -->
+        <div class="hero-content">
+            <div class="hero-pre-tag">✦ &nbsp;Student Mess Portal &nbsp;✦</div>
+            <h1>Mess<span class="hero-accent">ify</span></h1>
+            <div class="hero-divider">
+                <span class="hero-divider-line"></span>
+                <span class="hero-divider-icon">🍽️</span>
+                <span class="hero-divider-line"></span>
+            </div>
+            <p class="hero-sub">Smart. Simple. Satisfying.</p>
+        </div>
+
+        <!-- Decorative corner glows -->
+        <div class="hero-glow-left"  aria-hidden="true"></div>
+        <div class="hero-glow-right" aria-hidden="true"></div>
+
+        <style>
+            /* ── Hero base ── */
+            .hero {
+                position: relative;
+                min-height: 72vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+            .hero-content {
+                position: relative;
+                z-index: 2;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0;
+            }
+
+            /* ── Pre-tag ── */
+            .hero-pre-tag {
+                font-size: 0.72rem;
+                font-weight: 700;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                color: rgba(255,65,108,0.7);
+                margin-bottom: 1rem;
+                animation: fadeInDown 0.7s ease both;
+            }
+
+            /* ── H1 with split color ── */
+            .hero h1 {
+                font-size: clamp(4.5rem, 12vw, 8rem);
+                font-weight: 800;
+                letter-spacing: -4px;
+                margin-bottom: 0;
+                line-height: 1;
+                /* gradient on the full word */
+                background: linear-gradient(135deg, #ff4b2b, #ff416c, #c850c0, #4158d0);
+                background-size: 300% 300%;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                animation: gradient-shift 5s ease infinite, fadeInUp 0.7s 0.15s ease both;
+                position: relative;
+            }
+            /* subtle glow under title */
+            .hero h1::after {
+                content: 'Messify';
+                position: absolute;
+                inset: 0;
+                z-index: -1;
+                background: inherit;
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                filter: blur(28px);
+                opacity: 0.45;
+            }
+            .hero-accent {
+                /* override — keep identical so gradient flows */
+                -webkit-text-fill-color: inherit;
+            }
+
+            /* ── Divider ── */
+            .hero-divider {
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                margin: 1.2rem 0;
+                animation: fadeInUp 0.7s 0.25s ease both;
+            }
+            .hero-divider-line {
+                display: block;
+                width: 80px;
+                height: 1px;
+                background: linear-gradient(90deg, transparent, rgba(255,65,108,0.5));
+            }
+            .hero-divider-line:last-child {
+                background: linear-gradient(90deg, rgba(255,65,108,0.5), transparent);
+            }
+            .hero-divider-icon { font-size: 1.3rem; }
+
+            /* ── Sub tagline ── */
+            .hero-sub {
+                font-family: 'Outfit', sans-serif;
+                font-size: 1.15rem;
+                font-weight: 400;
+                letter-spacing: 4px;
+                text-transform: uppercase;
+                color: var(--text-muted);
+                animation: fadeInUp 0.7s 0.35s ease both;
+            }
+
+            /* ── Floating food orb ring ── */
+            .hero-float-ring {
+                position: absolute;
+                inset: 0;
+                z-index: 1;
+                pointer-events: none;
+            }
+            .hero-orb {
+                position: absolute;
+                font-size: 1.6rem;
+                top: 50%;
+                left: 50%;
+                /* place on a circle of radius ~42% */
+                --radius: 42%;
+                --angle: calc(var(--i) * 60deg);
+                transform:
+                    translate(-50%, -50%)
+                    rotate(var(--angle))
+                    translateY(calc(-1 * var(--radius) * 1))
+                    rotate(calc(-1 * var(--angle)));
+                animation: orb-float var(--d, 14s) ease-in-out infinite alternate,
+                           orb-drift 28s linear infinite;
+                opacity: 0.55;
+                filter: blur(0.5px);
+            }
+            .hero-orb:nth-child(1) { --d:13s; }
+            .hero-orb:nth-child(2) { --d:16s; animation-delay:-3s; }
+            .hero-orb:nth-child(3) { --d:11s; animation-delay:-6s; }
+            .hero-orb:nth-child(4) { --d:15s; animation-delay:-9s; }
+            .hero-orb:nth-child(5) { --d:12s; animation-delay:-4s; }
+            .hero-orb:nth-child(6) { --d:17s; animation-delay:-7s; }
+
+            @keyframes orb-float {
+                from { opacity: 0.35; transform:
+                    translate(-50%,-50%)
+                    rotate(var(--angle))
+                    translateY(calc(-42vh))
+                    rotate(calc(-1 * var(--angle)))
+                    scale(0.85); }
+                to   { opacity: 0.65; transform:
+                    translate(-50%,-50%)
+                    rotate(var(--angle))
+                    translateY(calc(-38vh))
+                    rotate(calc(-1 * var(--angle)))
+                    scale(1.1); }
+            }
+            @keyframes orb-drift {
+                from { --angle: calc(var(--i) * 60deg); }
+                to   { --angle: calc(var(--i) * 60deg + 360deg); }
+            }
+
+            /* ── Decorative glows ── */
+            .hero-glow-left {
+                position: absolute;
+                left: -5%;
+                top: 20%;
+                width: 340px; height: 340px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(255,65,108,0.14) 0%, transparent 70%);
+                animation: hero-pulse 7s ease-in-out infinite;
+                pointer-events: none;
+            }
+            .hero-glow-right {
+                position: absolute;
+                right: -5%;
+                bottom: 15%;
+                width: 280px; height: 280px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(0,210,255,0.11) 0%, transparent 70%);
+                animation: hero-pulse 9s 2s ease-in-out infinite;
+                pointer-events: none;
+            }
+
+            @media (max-width: 768px) {
+                .hero-orb { font-size: 1.2rem; }
+                .hero-divider-line { width: 50px; }
+                .hero-sub { letter-spacing: 2px; font-size: 0.95rem; }
+            }
+        </style>
+    </header>
+
+
+    <main class="container">
+        <!-- STATS SECTION -->
+        <section class="stats-section reveal">
+            <div class="stat-box">
+                <h3>1,254</h3>
+                <p>Total Students</p>
+            </div>
+            <div class="stat-box">
+                <h3>4</h3>
+                <p>Meals Daily</p>
+            </div>
+            <div class="stat-box">
+                <h3>4.8/5</h3>
+                <p>Average Rating</p>
+            </div>
+        </section>
+
+        <!-- INFO SECTION (Timings & Fees) -->
+        <section id="info" class="reveal">
+            <h2>Timings & Fee Structure</h2>
+            <div class="dashboard-cards" style="margin-top: 0;">
+                <div class="dash-card">
+                    <h3
+                        style="border-bottom: 1px solid var(--glass-border); margin-bottom: 1rem; padding-bottom: 0.5rem; color: var(--accent);">
+                        🕒 Mess Timings</h3>
+                    <p><strong>Breakfast:</strong> 07:30 AM - 09:30 AM</p>
+                    <p><strong>Lunch:</strong> 12:30 PM - 02:30 PM</p>
+                    <p><strong>Evening Snacks:</strong> 05:00 PM - 06:00 PM</p>
+                    <p><strong>Dinner:</strong> 07:30 PM - 09:30 PM</p>
+                </div>
+                <div class="dash-card">
+                    <h3
+                        style="border-bottom: 1px solid var(--glass-border); margin-bottom: 1rem; padding-bottom: 0.5rem; color: var(--accent);">
+                        💳 Monthly Fee Structure</h3>
+                    <p><strong>Boys Hostel:</strong> ₹3,000 / month</p>
+                    <p><strong>Girls Hostel:</strong> ₹2,800 / month</p>
+                    <p><strong>Tiffin Delivery:</strong> +₹500 / month</p>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">* Fees automatically
+                        calculate during registration.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOGIN & DASHBOARD SECTION -->
+        <section id="dashboard-section" class="reveal">
+            <h2>🔐 Student & Admin Portal</h2>
+            <!-- Login View -->
+            <div id="login-view">
+                <div class="login-tabs">
+                    <button type="button" class="btn-primary login-tab-btn" id="tab-student" onclick="switchLoginTab('student')">🎓 Student Login</button>
+                    <button type="button" class="btn-secondary login-tab-btn" id="tab-admin"  onclick="switchLoginTab('admin')">⚙️ Admin Login</button>
+                </div>
+
+                <div id="student-login-form-container">
+                    <div style="max-width:420px; margin: 0 auto;">
+                        <div style="text-align:center; margin-bottom:1.5rem;">
+                            <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,65,108,0.1);border:2px solid rgba(255,65,108,0.3);display:inline-flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:0.7rem;">🎓</div>
+                            <h2 style="display:block;border:none;padding:0;margin:0;font-size:1.5rem;">Student Portal</h2>
+                            <p style="color:var(--text-muted);font-size:0.88rem;margin-top:0.3rem;">Enter your credentials to access your dashboard</p>
+                        </div>
+                        <form id="login-form">
+                            <div class="form-group">
+                                <label for="login-id">Student Login ID</label>
+                                <input type="text" id="login-id" placeholder="Enter your first name (e.g., Ram)" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" placeholder="Enter your password" required>
+                            </div>
+                            <button type="button" class="btn-primary" onclick="handleLogin('student')" style="width:100%;">Log In to Dashboard →</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="admin-login-form-container" class="hidden">
+                    <div style="max-width:420px; margin: 0 auto;">
+                        <div style="text-align:center; margin-bottom:1.5rem;">
+                            <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,65,108,0.1);border:2px solid rgba(255,65,108,0.3);display:inline-flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:0.7rem;">⚙️</div>
+                            <h2 style="display:block;border:none;padding:0;margin:0;font-size:1.5rem;">Management Portal</h2>
+                            <p style="color:var(--text-muted);font-size:0.88rem;margin-top:0.3rem;">Admin access only — authorized personnel</p>
+                        </div>
+                        <form id="admin-login-form">
+                            <div class="form-group">
+                                <label for="admin-login-id">Admin ID</label>
+                                <input type="text" id="admin-login-id" placeholder="Enter admin ID" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="admin-password">Admin Password</label>
+                                <input type="password" id="admin-password" placeholder="Enter admin password" required>
+                            </div>
+                            <button type="button" class="btn-primary" onclick="handleLogin('admin')" style="width:100%;">Access Dashboard →</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MENU SECTION -->
+        <section id="menu" class="reveal">
+            <h2>🍽️ Weekly Mess Menu</h2>
+
+            <!-- Meal cycle indicator -->
+            <div class="meal-cycle-bar" id="meal-cycle-bar">
+                <button class="mcb-btn active" data-meal="0">🌅 Breakfast</button>
+                <button class="mcb-btn" data-meal="1">☀️ Lunch</button>
+                <button class="mcb-btn" data-meal="2">🌙 Dinner</button>
+                <div class="mcb-progress" id="mcb-progress"></div>
+            </div>
+
+            <div class="menu-grid" id="menu-grid"></div>
+
+            <style>
+                /* ── Cycle Indicator Bar ── */
+                .meal-cycle-bar {
+                    display: flex;
+                    gap: 0.5rem;
+                    align-items: center;
+                    margin: 1.2rem 0 1.5rem;
+                    background: rgba(255,255,255,0.04);
+                    border: 1px solid rgba(255,255,255,0.08);
+                    border-radius: 12px;
+                    padding: 0.4rem;
+                    position: relative;
+                    flex-wrap: wrap;
+                }
+                .mcb-btn {
+                    flex: 1;
+                    min-width: 110px;
+                    padding: 0.55rem 1rem;
+                    border: none;
+                    border-radius: 8px;
+                    background: transparent;
+                    color: var(--text-muted);
+                    font-family: 'Outfit', sans-serif;
+                    font-size: 0.88rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: color 0.3s, background 0.3s;
+                    position: relative;
+                    z-index: 1;
+                }
+                .mcb-btn.active {
+                    background: rgba(255,65,108,0.15);
+                    color: #fff;
+                    border: 1px solid rgba(255,65,108,0.3);
+                }
+                .mcb-progress {
+                    position: absolute;
+                    bottom: 4px; left: 4px;
+                    height: 2px;
+                    background: linear-gradient(90deg, #ff416c, #c850c0);
+                    border-radius: 2px;
+                    transition: width 0.1s linear;
+                    width: 0%;
+                }
+
+                /* ── Menu Grid ── */
+                .menu-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 1.2rem;
+                }
+
+                /* ── Menu Card ── */
+                .menu-card {
+                    background: rgba(255,255,255,0.03);
+                    border: 1px solid rgba(255,255,255,0.08);
+                    border-radius: 18px;
+                    overflow: hidden;
+                    transition: transform 0.35s ease, border-color 0.35s, box-shadow 0.35s;
+                    position: relative;
+                }
+                .menu-card:hover {
+                    transform: translateY(-6px) scale(1.012);
+                    border-color: rgba(255,65,108,0.35);
+                    box-shadow: 0 18px 40px rgba(0,0,0,0.4), 0 0 18px rgba(255,65,108,0.12);
+                }
+
+                /* ── Slide Container ── */
+                .menu-slides {
+                    position: relative;
+                    height: 175px;
+                    overflow: hidden;
+                }
+                .menu-slide {
+                    position: absolute;
+                    inset: 0;
+                    background-size: cover;
+                    background-position: center;
+                    opacity: 0;
+                    transition: opacity 0.7s ease;
+                }
+                .menu-slide.active { opacity: 1; }
+                /* dark gradient overlay */
+                .menu-slide::after {
+                    content: '';
+                    position: absolute;
+                    inset: 0;
+                    background: linear-gradient(to top, rgba(6,8,15,0.92) 0%, rgba(6,8,15,0.25) 55%, transparent 100%);
+                }
+                /* Day label */
+                .menu-day-label {
+                    position: absolute;
+                    bottom: 0.65rem; left: 0.9rem;
+                    z-index: 3;
+                    pointer-events: none;
+                }
+                .menu-day-badge {
+                    display: inline-block;
+                    background: var(--accent);
+                    color: #fff;
+                    font-size: 0.6rem;
+                    font-weight: 700;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                    padding: 0.12rem 0.5rem;
+                    border-radius: 4px;
+                    margin-bottom: 0.2rem;
+                }
+                .menu-day-name {
+                    display: block;
+                    font-family: 'Outfit', sans-serif;
+                    font-size: 1.25rem;
+                    font-weight: 800;
+                    color: #fff;
+                }
+                /* Meal type overlay pill (shows current slide's meal) */
+                .slide-meal-label {
+                    position: absolute;
+                    top: 0.7rem; right: 0.7rem;
+                    z-index: 3;
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    padding: 0.2rem 0.6rem;
+                    border-radius: 6px;
+                    background: rgba(0,0,0,0.55);
+                    backdrop-filter: blur(6px);
+                    -webkit-backdrop-filter: blur(6px);
+                    border: 1px solid rgba(255,255,255,0.12);
+                    color: #fff;
+                    letter-spacing: 0.5px;
+                    transition: opacity 0.4s;
+                }
+
+                /* ── Meal Rows ── */
+                .menu-meals {
+                    padding: 0.9rem 1.1rem 1rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0;
+                }
+                .meal-row {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 0.55rem;
+                    padding: 0.48rem 0.6rem;
+                    border-bottom: 1px solid rgba(255,255,255,0.04);
+                    border-radius: 7px;
+                    font-size: 0.85rem;
+                    transition: background 0.4s, border-color 0.4s;
+                    margin-bottom: 2px;
+                }
+                .meal-row:last-child { border-bottom: none; }
+                .meal-row.active-meal {
+                    background: rgba(255,255,255,0.07);
+                    border-color: rgba(255,255,255,0.1);
+                }
+                .meal-row.active-meal.breakfast-row { background: rgba(255,208,127,0.08); border-color: rgba(255,208,127,0.2); }
+                .meal-row.active-meal.lunch-row     { background: rgba(127,213,255,0.08); border-color: rgba(127,213,255,0.2); }
+                .meal-row.active-meal.dinner-row    { background: rgba(183,153,255,0.08); border-color: rgba(183,153,255,0.2); }
+                .meal-icon {
+                    font-size: 0.85rem;
+                    flex-shrink: 0;
+                    width: 18px;
+                    text-align: center;
+                    margin-top: 0.08rem;
+                }
+                .meal-label {
+                    min-width: 62px;
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    flex-shrink: 0;
+                    margin-top: 0.08rem;
+                }
+                .meal-label.breakfast { color: #ffd07f; }
+                .meal-label.lunch     { color: #7fd5ff; }
+                .meal-label.dinner    { color: #b799ff; }
+                .meal-items { color: var(--text-muted); line-height: 1.4; font-size: 0.83rem; }
+
+                /* Sunday special */
+                .menu-card.sunday-special { grid-column: 1 / -1; }
+                .menu-card.sunday-special .menu-slides { height: 210px; }
+                .sunday-meals {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                }
+                .sunday-meals .meal-row {
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                    border-bottom: none;
+                    border-right: 1px solid rgba(255,255,255,0.05);
+                    padding: 0.9rem 0.7rem;
+                    gap: 0.25rem;
+                    border-radius: 0;
+                }
+                .sunday-meals .meal-row:last-child { border-right: none; }
+                .sunday-meals .meal-icon { font-size: 1.2rem; width: auto; }
+                .sunday-meals .meal-label { min-width: unset; font-size: 0.72rem; }
+                .sunday-meals .meal-items { font-weight: 500; color: var(--text-main); font-size: 0.82rem; }
+
+                @media (max-width: 900px) {
+                    .menu-grid { grid-template-columns: repeat(2, 1fr); }
+                    .menu-card.sunday-special { grid-column: 1 / -1; }
+                    .sunday-meals { grid-template-columns: 1fr; }
+                    .sunday-meals .meal-row { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+                }
+                @media (max-width: 560px) {
+                    .menu-grid { grid-template-columns: 1fr; }
+                }
+            </style>
+
+            <script>
+            (function() {
+                const CYCLE_MS = 3500;   // time per meal in ms
+                const MEALS = [
+                    { icon: '🌅', key: 'breakfast', label: 'Breakfast', cls: 'breakfast-row', pill: '🌅 Breakfast' },
+                    { icon: '☀️', key: 'lunch',     label: 'Lunch',     cls: 'lunch-row',    pill: '☀️ Lunch'    },
+                    { icon: '🌙', key: 'dinner',     label: 'Dinner',    cls: 'dinner-row',   pill: '🌙 Dinner'   },
+                ];
+
+                const menuData = [
+                    {
+                        day: 'Monday', badge: 'Mon',
+                        imgs: [
+                            'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=600&q=80',
+                            'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&q=80',
+                            'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&q=80'
+                        ],
+                        meals: ['Poha, Masala Chai', 'Steamed Rice, Toor Dal, Aloo Sabji', 'Phulka Roti, Shahi Paneer, Salad']
+                    },
+                    {
+                        day: 'Tuesday', badge: 'Tue',
+                        imgs: [
+                            'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=600&q=80',
+                            'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600&q=80',
+                            'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&q=80'
+                        ],
+                        meals: ['Rava Upma, Coconut Chutney', 'Chapati, Yellow Dal, Jeera Rice', 'Rice, Spicy Chicken Curry, Raita']
+                    },
+                    {
+                        day: 'Wednesday', badge: 'Wed',
+                        imgs: [
+                            'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=600&q=80',
+                            'https://images.unsplash.com/photo-1548943487-a2e4e43b4853?w=600&q=80',
+                            'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&q=80'
+                        ],
+                        meals: ['Bread, Butter, Jam, Boiled Egg', 'Rice, Rajma Masala, Pickle', 'Roti, Mix Veg Sabji, Dal Soup']
+                    },
+                    {
+                        day: 'Thursday', badge: 'Thu',
+                        imgs: [
+                            'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=600&q=80',
+                            'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&q=80',
+                            'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=600&q=80'
+                        ],
+                        meals: ['Soft Idli, Sambar, Red Chutney', 'Chapati, Tadka Dal Fry, Rice', 'Rice, Anda Curry, Cucumber Salad']
+                    },
+                    {
+                        day: 'Friday', badge: 'Fri',
+                        imgs: [
+                            'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600&q=80',
+                            'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&q=80',
+                            'https://images.unsplash.com/photo-1548943487-a2e4e43b4853?w=600&q=80'
+                        ],
+                        meals: ['Aloo Paratha, Dahi, Pickle', 'Rice, Pindi Chole, Onion Rings', 'Roti, Paneer Butter Masala, Dal']
+                    },
+                    {
+                        day: 'Saturday', badge: 'Sat',
+                        imgs: [
+                            'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=600&q=80',
+                            'https://images.unsplash.com/photo-1548943487-a2e4e43b4853?w=600&q=80',
+                            'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&q=80'
+                        ],
+                        meals: ['Crispy Masala Dosa, Sambar', 'Rice, Sambar, Papad, Pickle', 'Roti, Veg Curry, Sweet Kheer']
+                    },
+                    {
+                        day: 'Sunday Special!', badge: '✨ Special', special: true,
+                        imgs: [
+                            'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=1200&q=80',
+                            'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=1200&q=80',
+                            'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=1200&q=80'
+                        ],
+                        meals: ['Puri Bhaji + Halwa + Chai', 'Grand Thali — Rice, Dal, Sabji, Roti, Papad, Sweet, Pickle', 'Special Dum Biryani + Raita + Gulab Jamun']
+                    }
+                ];
+
+                // Build cards
+                const grid = document.getElementById('menu-grid');
+                menuData.forEach((d, di) => {
+                    const card = document.createElement('div');
+                    card.className = 'menu-card' + (d.special ? ' sunday-special' : '');
+                    card.dataset.idx = di;
+
+                    // Slides
+                    const slidesWrap = document.createElement('div');
+                    slidesWrap.className = 'menu-slides';
+                    d.imgs.forEach((url, si) => {
+                        const slide = document.createElement('div');
+                        slide.className = 'menu-slide' + (si === 0 ? ' active' : '');
+                        slide.style.backgroundImage = `url('${url}')`;
+                        slidesWrap.appendChild(slide);
+                    });
+
+                    // Day label
+                    const dayLabel = document.createElement('div');
+                    dayLabel.className = 'menu-day-label';
+                    dayLabel.innerHTML = `
+                        <span class="menu-day-badge" style="${d.special ? 'background:linear-gradient(90deg,#ff4b2b,#c850c0);' : ''}">${d.badge}</span><br>
+                        <span class="menu-day-name">${d.day}</span>`;
+
+                    // Meal type pill (shows current meal)
+                    const pillEl = document.createElement('div');
+                    pillEl.className = 'slide-meal-label';
+                    pillEl.textContent = MEALS[0].pill;
+                    slidesWrap.appendChild(dayLabel);
+                    slidesWrap.appendChild(pillEl);
+
+                    // Meal rows
+                    const mealsWrap = document.createElement('div');
+                    mealsWrap.className = d.special ? 'sunday-meals' : 'menu-meals';
+                    MEALS.forEach((m, mi) => {
+                        const row = document.createElement('div');
+                        row.className = `meal-row ${m.cls}${mi === 0 ? ' active-meal' : ''}`;
+                        row.innerHTML = `
+                            <span class="meal-icon">${m.icon}</span>
+                            <span class="meal-label ${m.key}">${m.label}</span>
+                            <span class="meal-items">${d.meals[mi]}</span>`;
+                        mealsWrap.appendChild(row);
+                    });
+
+                    card.appendChild(slidesWrap);
+                    card.appendChild(mealsWrap);
+                    grid.appendChild(card);
+                });
+
+                // Cycle logic - all cards stay in sync
+                let currentMeal = 0;
+                let elapsed = 0;
+                const progress = document.getElementById('mcb-progress');
+                const mcbBtns = document.querySelectorAll('.mcb-btn');
+
+                function setMeal(idx) {
+                    currentMeal = idx;
+                    // Update all cards
+                    document.querySelectorAll('.menu-card').forEach(card => {
+                        card.querySelectorAll('.menu-slide').forEach((s, si) => {
+                            s.classList.toggle('active', si === idx);
+                        });
+                        card.querySelectorAll('.meal-row').forEach((r, ri) => {
+                            r.classList.toggle('active-meal', ri === idx);
+                        });
+                        const pill = card.querySelector('.slide-meal-label');
+                        if (pill) pill.textContent = MEALS[idx].pill;
+                    });
+                    // Update indicator bar buttons
+                    mcbBtns.forEach((b, bi) => b.classList.toggle('active', bi === idx));
+                }
+
+                // Let users click the indicator buttons too
+                mcbBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        setMeal(+btn.dataset.meal);
+                        elapsed = 0;
+                    });
+                });
+
+                // Smooth progress bar + auto-advance
+                const TICK = 50;
+                setInterval(() => {
+                    elapsed += TICK;
+                    const pct = (elapsed / CYCLE_MS) * 100;
+                    if (progress) progress.style.width = Math.min(pct, 100) + '%';
+                    if (elapsed >= CYCLE_MS) {
+                        elapsed = 0;
+                        setMeal((currentMeal + 1) % 3);
+                    }
+                }, TICK);
+            })();
+            </script>
+
+        </section>
+
+
+
+
+        <!-- GALLERY SECTION -->
+        <section id="gallery" class="reveal">
+            <div class="gallery-header">
+                <div>
+                    <h2>📸 Mess &amp; Campus Gallery</h2>
+                    <p class="gallery-sub">A glimpse into our vibrant dining culture, freshly cooked meals &amp; campus life</p>
+                </div>
+                <div class="gallery-filter-pills">
+                    <button class="gpill active" data-filter="all">All</button>
+                    <button class="gpill" data-filter="food">🍽️ Food</button>
+                    <button class="gpill" data-filter="dining">🏛️ Dining</button>
+                    <button class="gpill" data-filter="kitchen">👨‍🍳 Kitchen</button>
+                </div>
+            </div>
+
+            <div class="gallery-masonry" id="gallery-masonry">
+
+                <!-- Row 1 -->
+                <div class="gitem tall" data-cat="dining">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=85" alt="Warm student dining hall with amber lighting" loading="lazy">
+                    <div class="goverlay">
+                        <span class="gcategory">🏛️ Dining Hall</span>
+                        <span class="gtitle">Warm & Welcoming Atmosphere</span>
+                    </div>
+                </div>
+
+                <div class="gitem" data-cat="food">
+                    <img src="https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=800&q=85" alt="Fresh Indian breakfast poha" loading="lazy">
+                    <div class="goverlay">
+                        <span class="gcategory">🍽️ Breakfast</span>
+                        <span class="gtitle">Fresh Morning Poha</span>
+                    </div>
+                </div>
+
+                <div class="gitem" data-cat="food">
+                    <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&q=85" alt="Biryani served in bowl" loading="lazy">
+                    <div class="goverlay">
+                        <span class="gcategory">🍽️ Special</span>
+                        <span class="gtitle">Signature Biryani</span>
+                    </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="gitem wide" data-cat="dining">
+                    <img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?w=1200&q=85" alt="Students eating at long dining tables" loading="lazy">
+                    <div class="goverlay">
+                        <span class="gcategory">🏛️ Dining Hall</span>
+                        <span class="gtitle">Students Together at Meal Time</span>
+                    </div>
+                </div>
+
+                <div class="gitem" data-cat="kitchen">
+                    <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&q=85" alt="Professional chef cooking" loading="lazy">
+                    <div class="goverlay">
+                        <span class="gcategory">👨‍🍳 Kitchen</span>
+                        <span class="gtitle">Professional Kitchen Staff</span>
+                    </div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="gitem" data-cat="food">
+                    <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&q=85" alt="Indian thali with dal rice" loading="lazy">
+                    <div class="goverlay">
+                        <span class="gcategory">🍽️ Lunch</span>
+                        <span class="gtitle">Grand Thali Platter</span>
+                    </div>
+                </div>
+
+                <div class="gitem" data-cat="food">
+                    <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=800&q=85" alt="Soft idli sambar breakfast" loading="lazy">
+                    <div class="goverlay">
+                        <span class="gcategory">🍽️ Breakfast</span>
+                        <span class="gtitle">South Indian Breakfast</span>
+                    </div>
+                </div>
+
+                <div class="gitem tall" data-cat="kitchen">
+                    <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=85" alt="Modern mess kitchen interior" loading="lazy">
+                    <div class="goverlay">
+                        <span class="gcategory">👨‍🍳 Kitchen</span>
+                        <span class="gtitle">Our Hygienic Kitchen</span>
+                    </div>
+                </div>
+
+                <!-- Row 4 -->
+                <div class="gitem wide" data-cat="food">
+                    <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=1200&q=85" alt="Colorful variety of Indian food spread" loading="lazy">
+                    <div class="goverlay">
+                        <span class="gcategory">🍽️ Sunday Special</span>
+                        <span class="gtitle">Sunday Feast — A Celebration on Every Plate</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <style>
+                /* ── Gallery Header ── */
+                .gallery-header {
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: space-between;
+                    gap: 1.2rem;
+                    flex-wrap: wrap;
+                    margin-bottom: 1.6rem;
+                }
+                .gallery-header h2 {
+                    margin-bottom: 0.3rem !important;
+                    padding-bottom: 0 !important;
+                    border-bottom: none !important;
+                }
+                .gallery-header h2::after { display: none; }
+                .gallery-sub {
+                    font-size: 0.88rem;
+                    color: var(--text-muted);
+                    margin: 0;
+                    max-width: 420px;
+                    line-height: 1.55;
+                }
+
+                /* ── Filter Pills ── */
+                .gallery-filter-pills {
+                    display: flex;
+                    gap: 0.45rem;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    padding-top: 0.3rem;
+                }
+                .gpill {
+                    padding: 0.38rem 0.95rem;
+                    border-radius: 20px;
+                    border: 1px solid rgba(255,255,255,0.12);
+                    background: rgba(255,255,255,0.04);
+                    color: var(--text-muted);
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    font-family: 'Outfit', sans-serif;
+                    cursor: pointer;
+                    transition: all 0.25s ease;
+                    letter-spacing: 0.2px;
+                }
+                .gpill:hover {
+                    background: rgba(255,65,108,0.1);
+                    border-color: rgba(255,65,108,0.3);
+                    color: #fff;
+                }
+                .gpill.active {
+                    background: rgba(255,65,108,0.18);
+                    border-color: rgba(255,65,108,0.45);
+                    color: #fff;
+                    box-shadow: 0 0 12px rgba(255,65,108,0.2);
+                }
+
+                /* ── Masonry Grid ── */
+                .gallery-masonry {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    grid-auto-rows: 220px;
+                    gap: 1rem;
+                }
+                .gitem {
+                    position: relative;
+                    border-radius: 16px;
+                    overflow: hidden;
+                    cursor: zoom-in;
+                    background: rgba(255,255,255,0.03);
+                    border: 1px solid rgba(255,255,255,0.07);
+                    transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275),
+                                border-color 0.4s ease,
+                                box-shadow 0.4s ease;
+                }
+                .gitem.tall { grid-row: span 2; }
+                .gitem.wide { grid-column: span 2; }
+
+                .gitem img {
+                    width: 100%; height: 100%;
+                    object-fit: cover;
+                    display: block;
+                    transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94),
+                                filter 0.6s ease;
+                    filter: brightness(0.88) saturate(1.1);
+                }
+                .gitem:hover {
+                    transform: translateY(-5px) scale(1.01);
+                    border-color: rgba(255,65,108,0.35);
+                    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(255,65,108,0.12);
+                    z-index: 2;
+                }
+                .gitem:hover img {
+                    transform: scale(1.1);
+                    filter: brightness(0.65) saturate(1.3);
+                }
+
+                /* ── Overlay ── */
+                .goverlay {
+                    position: absolute;
+                    inset: 0;
+                    background: linear-gradient(
+                        to top,
+                        rgba(6,8,20,0.92) 0%,
+                        rgba(6,8,20,0.45) 45%,
+                        rgba(6,8,20,0.05) 100%
+                    );
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    padding: 1.1rem 1.15rem;
+                    opacity: 0;
+                    transition: opacity 0.38s ease;
+                }
+                .gitem:hover .goverlay { opacity: 1; }
+
+                .gcategory {
+                    display: inline-block;
+                    font-size: 0.65rem;
+                    font-weight: 700;
+                    letter-spacing: 1.2px;
+                    text-transform: uppercase;
+                    color: #fff;
+                    background: rgba(255,65,108,0.75);
+                    border: 1px solid rgba(255,65,108,0.5);
+                    padding: 0.16rem 0.55rem;
+                    border-radius: 5px;
+                    margin-bottom: 0.45rem;
+                    width: fit-content;
+                    backdrop-filter: blur(4px);
+                }
+                .gtitle {
+                    color: #fff;
+                    font-family: 'Outfit', sans-serif;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    line-height: 1.35;
+                    transform: translateY(8px);
+                    transition: transform 0.38s ease;
+                    text-shadow: 0 2px 12px rgba(0,0,0,0.7);
+                }
+                .gitem:hover .gtitle { transform: translateY(0); }
+
+                /* ── Filter hide animation ── */
+                .gitem.g-hidden {
+                    opacity: 0;
+                    transform: scale(0.9);
+                    pointer-events: none;
+                    position: absolute;
+                }
+
+                /* ── Responsive ── */
+                @media (max-width: 900px) {
+                    .gallery-masonry {
+                        grid-template-columns: repeat(2, 1fr);
+                        grid-auto-rows: 190px;
+                    }
+                    .gallery-header { flex-direction: column; }
+                }
+                @media (max-width: 560px) {
+                    .gallery-masonry {
+                        grid-template-columns: 1fr;
+                        grid-auto-rows: 200px;
+                    }
+                    .gitem.tall, .gitem.wide { grid-row: span 1; grid-column: span 1; }
+                }
+            </style>
+
+            <script>
+            (function() {
+                const pills = document.querySelectorAll('.gpill');
+                const items = document.querySelectorAll('.gitem');
+                pills.forEach(pill => {
+                    pill.addEventListener('click', () => {
+                        pills.forEach(p => p.classList.remove('active'));
+                        pill.classList.add('active');
+                        const filter = pill.dataset.filter;
+                        items.forEach(item => {
+                            const match = filter === 'all' || item.dataset.cat === filter;
+                            item.style.opacity = match ? '1' : '0.18';
+                            item.style.transform = match ? '' : 'scale(0.96)';
+                            item.style.filter = match ? '' : 'grayscale(80%)';
+                            item.style.transition = 'opacity 0.35s ease, transform 0.35s ease, filter 0.35s ease';
+                        });
+                    });
+                });
+            })();
+            </script>
+        </section>
+
+        <!-- REGISTRATION FORM -->
+        <section id="register" class="reveal">
+            <h2>New Registration</h2>
+            <form id="register-form" onsubmit="handleRegistration(event)">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="roll">Roll Number <span
+                            style="font-size:0.8rem;color:var(--text-muted);font-weight:400;">(Auto-assigned on
+                            registration)</span></label>
+                    <input type="text" id="roll" placeholder="Loading..." readonly
+                        style="cursor:not-allowed; opacity:0.75; background:rgba(255,255,255,0.04);">
+                </div>
+
+                <div class="form-group">
+                    <label for="branch">College Name</label>
+                    <input type="text" id="branch" placeholder="E.g. Engineering College">
+                </div>
+
+                <!-- Gender used for Base Fee calculation -->
+                <div class="form-group">
+                    <label>Gender (Determines Base Fee)</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="gender" value="male" onchange="calculateFee()" required> Boys
+                            Hostel (₹3,000)</label>
+                        <label><input type="radio" name="gender" value="female" onchange="calculateFee()" required>
+                            Girls Hostel (₹2,800)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="messtype-select">Mess Type</label>
+                    <select id="messtype-select" title="Mess Type" aria-label="Mess Type" required>
+                        <option value="" disabled selected>-- Choose Mess Type --</option>
+                        <option value="Veg">🥦 Veg</option>
+                        <option value="Non-Veg">🍗 Non-Veg</option>
+                        <option value="Both">🍱 Both (Veg + Non-Veg)</option>
+                    </select>
+                </div>
+
+                <!-- Tiffin Delivery Option -->
+                <div class="form-group"
+                    style="padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 10px; border: 1px solid var(--glass-border);">
+                    <label style="color: var(--accent); font-size: 1.1rem;">Need Tiffin / Room Delivery Service?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="tiffin" value="yes" onchange="toggleAddress(); calculateFee()">
+                            Yes (+₹500 / mo)</label>
+                        <label><input type="radio" name="tiffin" value="no" onchange="toggleAddress(); calculateFee()"
+                                checked> No (Dine In)</label>
+                    </div>
+                </div>
+
+                <!-- Hidden Address Field -->
+                <div class="form-group hidden" id="address-group" style="margin-top: -0.5rem; padding-bottom: 1rem;">
+                    <label for="address">Delivery Address (Hostel / Room No.)</label>
+                    <textarea id="address" rows="2" placeholder="E.g. Room 104, Block B"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="month">Select Month</label>
+                    <input type="month" id="month" required>
+                </div>
+
+                <!-- Live Estimated Fee Box -->
+                <div class="form-group"
+                    style="background: rgba(255, 65, 108, 0.1); padding: 1.5rem; border-radius: 10px; border: 1px dashed var(--accent); margin-top: 1rem; text-align: center;">
+                    <h3 style="color: var(--text-main); font-size: 1.4rem;">Estimated Monthly Fee: <span id="calc-fee"
+                            style="color: var(--accent);">₹0</span></h3>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%;">Complete Secure Registration</button>
+            </form>
+        </section>
+
+        <!-- STUDENT REVIEWS SECTION -->
+        <section id="reviews" class="reveal">
+            <h2>Student Reviews</h2>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330" alt="Priya M."
+                            class="review-avatar">
+                        <div class="review-author">
+                            <h4>Priya M.</h4>
+                            <span>ECE</span>
+                        </div>
+                    </div>
+                    <div class="stars">★★★★★</div>
+                    <p>"The food quality has really improved, and the new non-veg options are amazing! The payment
+                        portal is also seamless."</p>
+                </div>
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36" alt="Rahul K."
+                            class="review-avatar">
+                        <div class="review-author">
+                            <h4>Rahul K.</h4>
+                            <span>CS</span>
+                        </div>
+                    </div>
+                    <div class="stars">★★★★☆</div>
+                    <p>"Hygiene is well-maintained and Sunday special meals are the best part of the week. Highly
+                        recommend."</p>
+                </div>
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80" alt="Ananya S."
+                            class="review-avatar">
+                        <div class="review-author">
+                            <h4>Ananya S.</h4>
+                            <span>ME</span>
+                        </div>
+                    </div>
+                    <div class="stars">★★★★★</div>
+                    <p>"Very easy to register and pay. The feedback system actually works and the administration
+                        responds promptly!"</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEEDBACK SECTION -->
+        <section id="feedback" class="reveal">
+            <h2>Submit Feedback</h2>
+            <form id="feedback-form" onsubmit="handleFeedback(event)">
+                <div class="form-group">
+                    <label for="fname">Name (Optional)</label>
+                    <input type="text" id="fname" placeholder="Enter your name">
+                </div>
+
+                <div class="form-group">
+                    <label for="rating">Rate Food Quality</label>
+                    <select id="rating" required>
+                        <option value="" disabled selected>Select a rating...</option>
+                        <option value="Excellent">Excellent</option>
+                        <option value="Good">Good</option>
+                        <option value="Average">Average</option>
+                        <option value="Poor">Poor</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comments">Comments</label>
+                    <textarea id="comments" rows="5" placeholder="Share your experience or suggestions..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary">Submit Feedback</button>
+            </form>
+        </section>
+
+        <section id="contact" class="reveal">
+            <h2>Contact Us</h2>
+            <style>
+                .contact-layout {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 3rem;
+                    flex-wrap: wrap;
+                    max-width: 1000px;
+                    margin: 2rem auto 0;
+                }
+
+                .contact-left {
+                    flex: 1;
+                    min-width: 300px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .contact-right {
+                    flex: 1;
+                    min-width: 300px;
+                    width: 100%;
+                }
+
+                /* --- Making Dinner CSS Animation --- */
+                .cooking-scene {
+                    position: relative;
+                    width: 250px;
+                    height: 250px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .stove {
+                    position: absolute;
+                    bottom: 20px;
+                    width: 180px;
+                    height: 12px;
+                    background: #2a2a35;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+                }
+
+                .pan {
+                    position: absolute;
+                    bottom: 32px;
+                    left: 20px;
+                    width: 140px;
+                    height: 25px;
+                    background: linear-gradient(to right, #444, #111);
+                    border-bottom-left-radius: 20px;
+                    border-bottom-right-radius: 20px;
+                    transform-origin: 100% 50%;
+                    animation: toss 1.6s infinite cubic-bezier(0.3, 0.1, 0.4, 1);
+                    z-index: 2;
+                }
+
+                .pan-handle {
+                    position: absolute;
+                    right: -70px;
+                    top: 5px;
+                    width: 80px;
+                    height: 10px;
+                    background: #222;
+                    border-radius: 5px;
+                }
+
+                .food {
+                    position: absolute;
+                    bottom: 12px;
+                    left: 45px;
+                    width: 50px;
+                    height: 18px;
+                    background: linear-gradient(to top right, #ff9a00, #ffcc00);
+                    border-radius: 20px;
+                    animation: flip 1.6s infinite cubic-bezier(0.3, 0.1, 0.4, 1);
+                    z-index: 1;
+                }
+
+                .fire {
+                    position: absolute;
+                    bottom: 20px;
+                    left: 65px;
+                    display: flex;
+                    gap: 8px;
+                    z-index: 3;
+                }
+
+                .flame {
+                    width: 14px;
+                    height: 25px;
+                    background: #ff6a00;
+                    border-radius: 50% 50% 20% 20%;
+                    animation: burn 0.4s infinite alternate;
+                    mix-blend-mode: screen;
+                }
+
+                .flame:nth-child(2) {
+                    height: 35px;
+                    animation-delay: 0.1s;
+                    background: #ff416c;
+                }
+
+                .flame:nth-child(3) {
+                    height: 20px;
+                    animation-delay: 0.2s;
+                    background: #ffbc00;
+                }
+
+                .steam {
+                    position: absolute;
+                    bottom: 90px;
+                    width: 20px;
+                    height: 20px;
+                    background: rgba(255, 255, 255, 0.7);
+                    border-radius: 50%;
+                    filter: blur(10px);
+                    opacity: 0;
+                    animation: rise 2s infinite ease-in;
+                }
+
+                .steam:nth-child(1) {
+                    left: 60px;
+                }
+
+                .steam:nth-child(2) {
+                    left: 100px;
+                    animation-delay: 0.6s;
+                }
+
+                .steam:nth-child(3) {
+                    left: 140px;
+                    animation-delay: 1.2s;
+                }
+
+                @keyframes toss {
+
+                    0%,
+                    100% {
+                        transform: rotate(0deg);
+                    }
+
+                    50% {
+                        transform: rotate(-15deg);
+                    }
+                }
+
+                @keyframes flip {
+
+                    0%,
+                    100% {
+                        transform: translateY(0) rotate(0deg);
+                    }
+
+                    50% {
+                        transform: translateY(-90px) rotate(180deg);
+                    }
+                }
+
+                @keyframes burn {
+                    0% {
+                        transform: translateY(0) scaleY(1);
+                        opacity: 0.8;
+                    }
+
+                    100% {
+                        transform: translateY(-4px) scaleY(1.3);
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes rise {
+                    0% {
+                        transform: translateY(0) scale(1);
+                        opacity: 0.8;
+                    }
+
+                    100% {
+                        transform: translateY(-90px) scale(2.5);
+                        opacity: 0;
+                    }
+                }
+            </style>
+
+            <div class="contact-layout">
+                <!-- Left Side: Animation -->
+                <div class="contact-left">
+                    <div class="cooking-scene">
+                        <div class="steam"></div>
+                        <div class="steam"></div>
+                        <div class="steam"></div>
+                        <div class="fire">
+                            <div class="flame"></div>
+                            <div class="flame"></div>
+                            <div class="flame"></div>
+                        </div>
+                        <div class="stove"></div>
+                        <div class="pan">
+                            <div class="pan-handle"></div>
+                            <div class="food"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side: Contact Info -->
+                <div class="contact-right">
+                    <div class="contact-info" style="margin:0; width:100%; max-width:100%;">
+                        <div class="contact-card">
+                            <strong>Email</strong>
+                            <span>messify55@gmail.com, support@messify.in</span>
+                        </div>
+                        <div class="contact-card">
+                            <strong>Phone</strong>
+                            <span>7620680450</span>
+                        </div>
+                        <div class="contact-card">
+                            <strong>Address</strong>
+                            <span>Karvand Naka, Shirpur, 425405</span>
+                        </div>
+                        <div class="contact-card">
+                            <strong style="min-width: 140px;">Customer Support</strong>
+                            <span>rohannere20@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer" style="padding: 0; background: transparent;">
+        <style>
+            .footer-main {
+                background: rgba(255,255,255,0.02);
+                border-top: 1px solid rgba(255,255,255,0.07);
+                padding: 2.5rem 2rem 1.2rem;
+                margin-top: 3rem;
+            }
+            .footer-grid {
+                display: grid;
+                grid-template-columns: 1.6fr 1fr 1fr;
+                gap: 2rem 3rem;
+                max-width: 1100px;
+                margin: 0 auto 2rem;
+            }
+            @media (max-width: 700px) {
+                .footer-grid { grid-template-columns: 1fr 1fr; }
+                .footer-brand { grid-column: 1 / -1; }
+            }
+            @media (max-width: 420px) {
+                .footer-grid { grid-template-columns: 1fr; }
+            }
+            .footer-brand .fb-logo {
+                font-size: 1.4rem;
+                font-weight: 800;
+                background: linear-gradient(90deg, #ff416c, #ff9a44);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 0.5rem;
+            }
+            .footer-brand p {
+                font-size: 0.85rem;
+                color: var(--text-muted);
+                line-height: 1.6;
+                max-width: 280px;
+            }
+            .footer-col h5 {
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: rgba(255,65,108,0.8);
+                margin: 0 0 0.9rem;
+                font-weight: 700;
+            }
+            .footer-col ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 0.45rem;
+            }
+            .footer-col ul li a {
+                color: var(--text-muted);
+                text-decoration: none;
+                font-size: 0.87rem;
+                transition: color 0.2s;
+            }
+            .footer-col ul li a:hover { color: var(--text-main); }
+            .footer-col ul li span {
+                color: var(--text-muted);
+                font-size: 0.87rem;
+            }
+            .footer-divider {
+                border: none;
+                border-top: 1px solid rgba(255,255,255,0.06);
+                max-width: 1100px;
+                margin: 0 auto 1.2rem;
+            }
+            .footer-bottom {
+                max-width: 1100px;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 0.8rem;
+                font-size: 0.82rem;
+                color: var(--text-muted);
+                padding-bottom: 0.5rem;
+            }
+            .footer-bottom .copy { opacity: 0.6; }
+            .built-by {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                background: rgba(255,65,108,0.07);
+                border: 1px solid rgba(255,65,108,0.18);
+                border-radius: 20px;
+                padding: 0.3rem 0.9rem 0.3rem 0.6rem;
+                font-size: 0.82rem;
+                font-weight: 600;
+                color: var(--text-main);
+            }
+            .built-by .heart { color: #ff416c; font-size: 0.95rem; }
+            .built-by .name {
+                background: linear-gradient(90deg, #ff416c, #ff9a44);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                font-weight: 700;
+            }
+        </style>
+
+        <div class="footer-main">
+            <div class="footer-grid">
+                <!-- Brand -->
+                <div class="footer-brand">
+                    <div class="fb-logo">🍱 Messify</div>
+                    <p>A smart mess management system designed to simplify student meal tracking, attendance, payments, and leave management — all in one place.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-col">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="#menu">Weekly Menu</a></li>
+                        <li><a href="#gallery">Gallery</a></li>
+                        <li><a href="#register">Register</a></li>
+                        <li><a href="#reviews">Reviews</a></li>
+                        <li><a href="#feedback">Feedback</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div class="footer-col">
+                    <h5>Contact</h5>
+                    <ul>
+                        <li><span>📧 messify55@gmail.com</span></li>
+                        <li><span>📞 7620680450</span></li>
+                        <li><span>📍 Karvand Naka, Shirpur</span></li>
+                        <li><span>🕘 Mon–Sat, 9am–6pm</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="footer-divider">
+
+            <div class="footer-bottom">
+                <span class="copy">© 2026 Messify. All rights reserved.</span>
+                <div class="built-by">
+                    <span class="heart">❤️</span>
+                    Built by <span class="name">&nbsp;Mayank</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE SCRIPTS -->
+    <script>
+        const API_BASE = (window.location.protocol === 'file:' || window.location.port === '5500')
+            ? 'http://localhost:3000'
+            : '';
+
+
+        // Premium Interactions
+        document.addEventListener('DOMContentLoaded', () => {
+            // Scroll Reveal Animation
+            const reveals = document.querySelectorAll('.reveal');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { rootMargin: '0px 0px -50px 0px', threshold: 0.1 });
+
+            reveals.forEach(reveal => revealObserver.observe(reveal));
+
+            // Mouse tracking for premium hover glow effect on cards
+            document.querySelectorAll('.dash-card, .menu-card').forEach(card => {
+                card.onmousemove = e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                };
+            });
+        });
+
+        function switchLoginTab(tab) {
+            const studentContainer = document.getElementById('student-login-form-container');
+            const adminContainer = document.getElementById('admin-login-form-container');
+            const studentTabBtn = document.getElementById('tab-student');
+            const adminTabBtn = document.getElementById('tab-admin');
+
+            if (tab === 'student') {
+                studentContainer.classList.remove('hidden');
+                adminContainer.classList.add('hidden');
+
+                studentTabBtn.className = 'btn-primary';
+                adminTabBtn.className = 'btn-secondary';
+            } else {
+                studentContainer.classList.add('hidden');
+                adminContainer.classList.remove('hidden');
+
+                adminTabBtn.className = 'btn-primary';
+                studentTabBtn.className = 'btn-secondary';
+            }
+        }
+
+
+
+        async function handleLogin(type = 'student') {
+            const isStudent = type === 'student';
+            const loginIdInput = isStudent ? document.getElementById('login-id') : document.getElementById('admin-login-id');
+            const passwordInput = isStudent ? document.getElementById('password') : document.getElementById('admin-password');
+
+            const loginId = loginIdInput.value;
+            const password = passwordInput.value;
+
+            if (!loginId || !password) {
+                alert("Please enter both your Login ID and Password.");
+                return;
+            }
+
+            const loginBtn = isStudent ? document.querySelector('#login-form button') : document.querySelector('#admin-login-form button');
+            const originalText = loginBtn.innerText;
+            loginBtn.innerText = "Logging in...";
+
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ loginId, password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    if (result.role === 'admin') {
+                        sessionStorage.setItem('adminRole', 'true');
+                        window.open('adminDashboard.html', '_blank');
+                        document.getElementById('admin-password').value = '';
+                        document.getElementById('password').value = '';
+                        return;
+                    }
+
+                    const student = result.student;
+                    sessionStorage.setItem('currentStudent', JSON.stringify(student));
+                    window.open('studentDashboard.html', '_blank');
+
+                    document.getElementById('password').value = '';
+                    document.getElementById('admin-password').value = '';
+                } else {
+                    alert("❌ " + result.message);
+                }
+            } catch (error) {
+                console.error('Error logging in:', error);
+                alert("⚠️ Could not connect to backend server!\nMake sure 'node server.js' is running.");
+            } finally {
+                loginBtn.innerText = originalText;
+            }
+        }
+
+
+
+
+        // DYNAMIC FORM LOGIC (Tiffin Address & Price Calculation)
+        function toggleAddress() {
+            const tiffinYes = document.querySelector('input[name="tiffin"][value="yes"]').checked;
+            const addressGroup = document.getElementById('address-group');
+            const addressInput = document.getElementById('address');
+
+            if (tiffinYes) {
+                addressGroup.classList.remove('hidden');
+                addressInput.setAttribute('required', 'true');
+            } else {
+                addressGroup.classList.add('hidden');
+                addressInput.removeAttribute('required');
+                addressInput.value = ''; // clear when hidden
+            }
+        }
+
+        function calculateFee() {
+            const gender = document.querySelector('input[name="gender"]:checked')?.value;
+            const tiffinYes = document.querySelector('input[name="tiffin"][value="yes"]').checked;
+
+            let total = 0;
+            // Base fees based on gender
+            if (gender === 'male') total += 3000;
+            else if (gender === 'female') total += 2800;
+
+            // Add Tiffin delivery surcharge
+            if (tiffinYes && gender) {
+                total += 500;
+            }
+
+            // Update UI
+            document.getElementById('calc-fee').innerText = total > 0 ? "₹" + total : "₹0";
+        }
+
+        // Fetch and display the next available roll number
+        async function loadNextRollNumber() {
+            try {
+                const res = await fetch(`${API_BASE}/next-roll`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const rollInput = document.getElementById('roll');
+                    rollInput.value = data.nextRoll;
+                    rollInput.placeholder = data.nextRoll;
+                }
+            } catch (e) {
+                document.getElementById('roll').placeholder = 'Server offline';
+            }
+        }
+
+        // Auto-load roll number when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNextRollNumber();
+        });
+
+        // FORM SUBMISSION TO BACKEND
+        async function handleRegistration(event) {
+            event.preventDefault();
+
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Processing Details...";
+
+            // Roll number is assigned by server; do NOT send it from client
+            const formData = {
+                name: document.getElementById('name').value,
+                branch: document.getElementById('branch').value,
+                gender: document.querySelector('input[name="gender"]:checked')?.value || 'Not specified',
+                messType: document.getElementById('messtype-select').value,
+                tiffinDelivery: document.querySelector('input[name="tiffin"]:checked')?.value || 'no',
+                deliveryAddress: document.getElementById('address').value,
+                billingMonth: document.getElementById('month').value,
+                totalCalculatedFee: document.getElementById('calc-fee').innerText
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert("✅ Registration successful!\n\n🎫 Roll Number Assigned: " + result.roll + "\n\n🔐 IMPORTANT: PLEASE SAVE YOUR CREDENTIALS!\nLogin ID: " + result.loginId + "\nPassword: " + result.password);
+                    event.target.reset();
+                    calculateFee(); // Reset fee display
+                    toggleAddress(); // Hide address field
+                    loadNextRollNumber(); // Update roll number for next registration
+                } else {
+                    alert("❌ Error registering. Please try again.");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("⚠️ Could not connect to backend server!\nMake sure 'node server.js' is running.");
+            } finally {
+                submitBtn.innerText = originalText;
+            }
+        }
+
+        async function handleFeedback(event) {
+            event.preventDefault();
+
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Submitting...";
+
+            const formData = {
+                fname: document.getElementById('fname').value,
+                rating: document.getElementById('rating').value,
+                comments: document.getElementById('comments').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert("✅ " + result.message);
+                    event.target.reset();
+                } else {
+                    alert("❌ Error submitting feedback.");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("⚠️ Could not connect to backend server!\nMake sure 'node server.js' is running.");
+            } finally {
+                submitBtn.innerText = originalText;
+            }
+        }
+
+        // Payment Functions
+
+
+
+
+
+    </script>
+
+    <!-- ===== MESS ASSISTANT CHATBOT ===== -->
+    <style>
+        /* ---------- Floating Button ---------- */
+        #chat-fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #ff6a00);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 24px rgba(255, 65, 108, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            z-index: 9998;
+            transition: transform 0.25s, box-shadow 0.25s;
+            animation: fab-pulse 2.5s infinite;
+        }
+
+        #chat-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 32px rgba(255, 65, 108, 0.65);
+        }
+
+        @keyframes fab-pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 6px 24px rgba(255, 65, 108, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 6px 36px rgba(255, 65, 108, 0.8);
+            }
+        }
+
+        /* ---------- Chat Panel ---------- */
+        #chat-panel {
+            position: fixed;
+            bottom: 6.5rem;
+            right: 2rem;
+            width: 360px;
+            max-height: 520px;
+            display: flex;
+            flex-direction: column;
+            background: rgba(18, 18, 30, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 65, 108, 0.25);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 9997;
+            overflow: hidden;
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #chat-panel.open {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        @media (max-width: 420px) {
+            #chat-panel {
+                width: calc(100vw - 2rem);
+                right: 1rem;
+            }
+        }
+
+        /* Header */
+        .chat-header {
+            background: linear-gradient(135deg, rgba(255, 65, 108, 0.25), rgba(255, 106, 0, 0.15));
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid rgba(255, 65, 108, 0.2);
+        }
+
+        .chat-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #ff6a00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .chat-header-info h4 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .chat-header-info p {
+            margin: 0;
+            font-size: 0.78rem;
+            color: #4caf50;
+        }
+
+        .chat-close-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.3rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0.2rem;
+            transition: color 0.2s;
+        }
+
+        .chat-close-btn:hover {
+            color: var(--accent);
+        }
+
+        /* Messages */
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 65, 108, 0.3) transparent;
+        }
+
+        .msg {
+            max-width: 82%;
+            padding: 0.65rem 1rem;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            animation: msg-in 0.25s ease;
+        }
+
+        @keyframes msg-in {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+        }
+
+        .msg.bot {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg.user {
+            background: linear-gradient(135deg, rgba(255, 65, 108, 0.3), rgba(255, 106, 0, 0.2));
+            border: 1px solid rgba(255, 65, 108, 0.3);
+            color: var(--text-main);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Typing indicator */
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            padding: 0.2rem 0;
+        }
+
+        .typing-dots span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+            opacity: 0.6;
+            animation: dot-bounce 1.2s infinite;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dot-bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-6px);
+            }
+        }
+
+        /* Quick Replies */
+        #chat-chips {
+            padding: 0.6rem 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .chip {
+            background: rgba(255, 65, 108, 0.1);
+            border: 1px solid rgba(255, 65, 108, 0.35);
+            color: var(--text-main);
+            border-radius: 20px;
+            padding: 0.3rem 0.75rem;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            white-space: nowrap;
+        }
+
+        .chip:hover {
+            background: rgba(255, 65, 108, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* Input Row */
+        .chat-input-row {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        #chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 22px;
+            padding: 0.55rem 1rem;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        #chat-input:focus {
+            border-color: rgba(255, 65, 108, 0.5);
+        }
+
+        #chat-send-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #ff6a00);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            transition: transform 0.15s;
+        }
+
+        #chat-send-btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
+
+    <!-- Floating Button -->
+    <button id="chat-fab" onclick="toggleChat()" title="Mess Assistant">🍽️</button>
+
+    <!-- Chat Panel -->
+    <div id="chat-panel">
+        <div class="chat-header">
+            <div class="chat-avatar">🤖</div>
+            <div class="chat-header-info">
+                <h4>Mess Assistant</h4>
+                <p>● Online · Always ready to help</p>
+            </div>
+            <button class="chat-close-btn" onclick="toggleChat()">✕</button>
+        </div>
+
+        <div id="chat-messages"></div>
+
+        <!-- Quick-reply chips -->
+        <div id="chat-chips">
+            <span class="chip" onclick="sendChip(this)">⏰ Timings</span>
+            <span class="chip" onclick="sendChip(this)">💳 Fees</span>
+            <span class="chip" onclick="sendChip(this)">🍽️ Today's Menu</span>
+            <span class="chip" onclick="sendChip(this)">📝 Registration</span>
+            <span class="chip" onclick="sendChip(this)">🚴 Tiffin Delivery</span>
+            <span class="chip" onclick="sendChip(this)">🔐 Login Help</span>
+            <span class="chip" onclick="sendChip(this)">📞 Contact</span>
+        </div>
+
+        <div class="chat-input-row">
+            <input id="chat-input" type="text" placeholder="Ask me anything…"
+                onkeydown="if(event.key==='Enter') sendMessage()">
+            <button id="chat-send-btn" onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== MESS ASSISTANT =====
+        let chatOpen = false;
+        let chatGreeted = false;
+
+        function toggleChat() {
+            chatOpen = !chatOpen;
+            const panel = document.getElementById('chat-panel');
+            const fab = document.getElementById('chat-fab');
+            panel.classList.toggle('open', chatOpen);
+            fab.innerText = chatOpen ? '✕' : '🍽️';
+            if (chatOpen && !chatGreeted) {
+                chatGreeted = true;
+
+                // --- Voice Greeting ---
+                if ('speechSynthesis' in window) {
+                    const msg = new SpeechSynthesisUtterance("Welcome to Messify, how can I help you?");
+                    msg.volume = 1;
+                    msg.rate = 1;
+                    msg.pitch = 1;
+                    msg.lang = 'en-IN'; // Indian English accent if available
+                    window.speechSynthesis.speak(msg);
+                }
+
+                setTimeout(() => botTypeThen("👋 **Welcome to Messify!** How can I help you today?\n\nI can assist you with mess timings, fees, menu, registration, and more."), 400);
+            }
+            if (chatOpen) scrollChat();
+        }
+
+        function scrollChat() {
+            const el = document.getElementById('chat-messages');
+            setTimeout(() => el.scrollTop = el.scrollHeight, 50);
+        }
+
+        function addMsg(text, who) {
+            const box = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = 'msg ' + who;
+            div.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+            box.appendChild(div);
+            scrollChat();
+            return div;
+        }
+
+        function botTypeThen(text, delay = 800) {
+            const box = document.getElementById('chat-messages');
+            // Typing bubble
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'msg bot';
+            typingDiv.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+            box.appendChild(typingDiv);
+            scrollChat();
+            setTimeout(() => {
+                typingDiv.remove();
+                addMsg(text, 'bot');
+            }, delay);
+        }
+
+        function sendChip(chip) {
+            sendMessage(chip.innerText);
+        }
+
+        function sendMessage(text) {
+            const input = document.getElementById('chat-input');
+            const msg = (text || input.value).trim();
+            if (!msg) return;
+            input.value = '';
+            addMsg(msg, 'user');
+            const reply = getReply(msg.toLowerCase());
+            botTypeThen(reply, 700);
+        }
+
+        // ===== KNOWLEDGE BASE =====
+        function getReply(q) {
+            // Timings
+            if (/timing|time|open|breakfast|lunch|dinner|snack|meal hour/i.test(q)) {
+                return "🕒 **Mess Timings:**\n\n🌅 Breakfast: 07:30 – 09:30 AM\n☀️ Lunch: 12:30 – 02:30 PM\n🌆 Evening Snacks: 05:00 – 06:00 PM\n🌙 Dinner: 07:30 – 09:30 PM";
+            }
+            // Fees
+            if (/fee|cost|price|charge|pay|money|month|₹|rupee/i.test(q)) {
+                return "💳 **Monthly Fee Structure:**\n\n👦 Boys Hostel: **₹3,000 / month**\n👧 Girls Hostel: **₹2,800 / month**\n🚴 Tiffin Delivery: **+₹500 / month**\n\nFees are calculated automatically during registration!";
+            }
+            // Menu / Food
+            if (/menu|food|today|week|monday|tuesday|wednesday|thursday|friday|saturday|sunday|meal|dish|veg|non.?veg/i.test(q)) {
+                return "🍽️ **Weekly Menu Highlights:**\n\n🥣 Mon: Poha → Rice, Dal, Sabji → Roti, Paneer\n🫓 Wed: Bread Butter → Rice, Rajma → Roti, Mix Veg\n🌮 Fri: Paratha → Rice, Chole → Roti, Paneer\n🎉 **Sunday:** Puri Bhaji → Special Grand Thali → Special Biryani!\n\nScroll to the **Menu** section for the full weekly schedule.";
+            }
+            // Registration
+            if (/register|registration|sign up|enrol|join|new student|how to join/i.test(q)) {
+                return "📝 **How to Register:**\n\n1. Scroll to the **Registration** section below.\n2. Fill in your name, college, gender & mess type.\n3. Choose tiffin option if needed.\n4. Select your billing month & submit.\n5. You'll receive your **Login ID & Password** instantly!\n\n💡 Your roll number is assigned automatically.";
+            }
+            // Tiffin
+            if (/tiffin|delivery|room|deliver|deliver|home/i.test(q)) {
+                return "🚴 **Tiffin / Room Delivery:**\n\nYes! We offer room delivery for **+₹500/month**.\n\nDuring registration, select **\"Yes\"** for tiffin delivery and enter your hostel room address. Your food will be delivered fresh!";
+            }
+            // Login / Password
+            if (/login|password|credential|forgot|id|account|portal/i.test(q)) {
+                return "🔐 **Login Help:**\n\n• Your **Login ID** is your first name (e.g., `Ram`)\n• Your **Password** is your first name + `@1234` (e.g., `Ram@1234`)\n\nThese are shown at the time of registration. If you've lost them, please contact the mess office.";
+            }
+            // Contact
+            if (/contact|phone|email|address|office|support|reach|call|help/i.test(q)) {
+                return "📞 **Contact Us:**\n\n📧 messify55@gmail.com\n📧 support@messify.in\n📱 7620680450\n📍 Karvand Naka, Shirpur – 425405\n\n👨‍💼 Customer Support: rohannere20@gmail.com";
+            }
+            // Payment
+            if (/payment|paid|upi|qr|proof|receipt|approve|status/i.test(q)) {
+                return "💰 **Payment Process:**\n\n1. Log in to your **Student Dashboard**.\n2. Scan the **QR code** or use UPI to pay.\n3. Upload your **payment screenshot** as proof.\n4. Admin will verify and mark your payment as **✅ Paid**.\n5. Download your **receipt** after approval!";
+            }
+            // Attendance
+            if (/attendance|present|absent|leave|mark/i.test(q)) {
+                return "📋 **Attendance:**\n\nYour daily attendance is marked by the mess staff. You can view your **Present / Absent** count on your Student Dashboard after logging in.";
+            }
+            // Greeting
+            if (/hi|hello|hey|good morning|good evening|namaste|helo/i.test(q)) {
+                return "👋 Hello! I'm your Mess Assistant. Ask me about:\n\n⏰ Timings · 💳 Fees · 🍽️ Menu · 📝 Registration · 🚴 Tiffin · 🔐 Login · 📞 Contact";
+            }
+            // Thanks
+            if (/thank|thanks|thankyou|thx|ty/i.test(q)) {
+                return "😊 You're welcome! Feel free to ask anything else. I'm always here to help!";
+            }
+            // Bye
+            if (/bye|goodbye|see you|ta-ta/i.test(q)) {
+                return "👋 Goodbye! Come back anytime. Enjoy your meals! 🍛";
+            }
+            // Default
+            return "🤔 I'm not sure about that, but I can help with:\n\n⏰ **Timings** · 💳 **Fees** · 🍽️ **Menu**\n📝 **Registration** · 🚴 **Tiffin** · 🔐 **Login** · 📞 **Contact**\n\nTry one of the quick-reply buttons below!";
+        }
+    </script>
+    <!-- ===== WHATSAPP ORDER BUTTON ===== -->
+    <style>
+        .wa-float-btn {
+            position: fixed;
+            bottom: 6.5rem;
+            /* Placed above chatbot */
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #25D366;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+            z-index: 9996;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: wa-pulse 2s infinite;
+        }
+
+        .wa-float-btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.6);
+            color: #fff;
+        }
+
+        .wa-tooltip-text {
+            position: absolute;
+            right: 75px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #11111a;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            font-size: 0.85rem;
+            font-weight: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .wa-float-btn:hover .wa-tooltip-text {
+            opacity: 1;
+            transform: translateY(-50%) translateX(-5px);
+        }
+
+        @keyframes wa-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .wa-float-btn {
+                bottom: 5.5rem;
+                right: 1.2rem;
+                width: 55px;
+                height: 55px;
+            }
+
+            .wa-tooltip-text {
+                display: none;
+            }
+        }
+    </style>
+    <a href="https://wa.me/917620680450?text=Hi%2C%20I%20want%20to%3A%0A1.%20See%20mess%20plans%0A2.%20Order%20today%E2%80%99s%20food%0A3.%20Monthly%20tiffin%0APlease%20help."
+        class="wa-float-btn" target="_blank" rel="noopener noreferrer" title="Order Now on WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="32" height="32" fill="currentColor">
+            ```````````````````````
+            <path
+                d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157.1zM223.9 414.7c-33 0-65.3-8.9-93.6-25.7l-6.7-4-69.5 18.2 18.5-67.7-4.4-7c-18.4-29.3-28.1-63.5-28.1-98.5 0-101.9 83-184.9 184.9-184.9 49.3 0 95.8 19.3 130.8 54.2 34.8 35 54 81.3 54 130.8 0 102.1-83.3 184.6-184.9 184.6zM324.8 276.7c-5.5-2.8-32.8-16.2-37.9-18.1-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18.1-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-2.1-3.6 2.1-3.6 7.4-14 2.8-5.6 1.4-10.4-.5-13.4-1.9-3.2-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z" />
+        </svg>
+        <span class="wa-tooltip-text">Order Now on WhatsApp</span>
+    </a>
+</body>
+
+</html>

@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Management Dashboard | Messify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="mess.css">
+    <style>
+        body { padding-top: 80px; }
+        .hidden { display: none !important; }
+        #management-view { display: block; }
+
+        /* ── Admin Page Header ── */
+        .admin-page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(255,65,108,0.08) 0%, rgba(255,127,80,0.06) 100%);
+            border: 1px solid rgba(255,65,108,0.2);
+            border-radius: 18px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+        .admin-page-header h2 {
+            margin: 0;
+            font-size: 1.6rem;
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .admin-page-header p {
+            margin: 0.3rem 0 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .admin-header-actions {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* ── Stat Cards ── */
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 1.4rem 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 1.1rem;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 16px 16px 0 0;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+        }
+        .stat-card.blue::before  { background: linear-gradient(90deg,#4facfe,#00f2fe); }
+        .stat-card.pink::before  { background: linear-gradient(90deg,#ff416c,#ff4b2b); }
+        .stat-card.green::before { background: linear-gradient(90deg,#56ab2f,#a8e063); }
+        .stat-card.gold::before  { background: linear-gradient(90deg,#f7971e,#ffd200); }
+        .stat-card.blue:hover  { border-color: rgba(79,172,254,0.35); }
+        .stat-card.pink:hover  { border-color: rgba(255,65,108,0.35); }
+        .stat-card.green:hover { border-color: rgba(86,171,47,0.35); }
+        .stat-card.gold:hover  { border-color: rgba(247,151,30,0.35); }
+        .stat-icon {
+            font-size: 2rem;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .stat-card.blue  .stat-icon { background: rgba(79,172,254,0.12); }
+        .stat-card.pink  .stat-icon { background: rgba(255,65,108,0.12); }
+        .stat-card.green .stat-icon { background: rgba(86,171,47,0.12); }
+        .stat-card.gold  .stat-icon { background: rgba(247,151,30,0.12); }
+        .stat-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--text-main);
+        }
+        .stat-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+        .stat-sub span { font-weight: 600; color: var(--text-main); }
+
+        /* ── Table Section ── */
+        .table-section {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 18px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .table-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1.3rem 1.6rem;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            background: rgba(255,255,255,0.02);
+        }
+        .table-section-header h3 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        .admin-search {
+            padding: 0.55rem 1.1rem 0.55rem 2.4rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.06);
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+            min-width: 240px;
+            transition: border-color 0.2s, background 0.2s;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 0.75rem center;
+        }
+        .admin-search:focus {
+            border-color: rgba(255,65,108,0.5);
+            background-color: rgba(255,255,255,0.08);
+        }
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table thead tr {
+            background: rgba(255,65,108,0.07);
+        }
+        .admin-table thead th {
+            padding: 0.9rem 1.1rem;
+            text-align: left;
+            font-size: 0.73rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.9px;
+            color: rgba(255,65,108,0.9);
+            border-bottom: 1px solid rgba(255,65,108,0.15);
+            white-space: nowrap;
+        }
+        .admin-table tbody tr {
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            transition: background 0.15s ease;
+        }
+        .admin-table tbody tr:hover { background: rgba(255,255,255,0.04); }
+        .admin-table tbody tr:last-child { border-bottom: none; }
+        .admin-table td {
+            padding: 0.85rem 1.1rem;
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+        .roll-badge {
+            background: rgba(255,65,108,0.1);
+            border: 1px solid rgba(255,65,108,0.25);
+            color: var(--accent);
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            font-family: monospace;
+        }
+        .student-name-link {
+            color: var(--text-main);
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .student-name-link:hover { color: var(--accent); }
+        .mess-badge {
+            padding: 0.2rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .mess-veg    { background: rgba(86,171,47,0.15);  color: #8de860; border: 1px solid rgba(86,171,47,0.3); }
+        .mess-nonveg { background: rgba(255,65,108,0.12); color: #ff8a9b; border: 1px solid rgba(255,65,108,0.25); }
+        .mess-both   { background: rgba(247,151,30,0.12); color: #ffd57e; border: 1px solid rgba(247,151,30,0.3); }
+
+        /* ── Action Buttons ── */
+        .tbl-action-group { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+        .tbl-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.06);
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .tbl-btn:hover { transform: scale(1.12); }
+        .tbl-btn.view:hover  { background: rgba(23,162,184,0.25); border-color: #17a2b8; }
+        .tbl-btn.edit:hover  { background: rgba(255,193,7,0.25);  border-color: #ffc107; }
+        .tbl-btn.wa:hover    { background: rgba(37,211,102,0.25); border-color: #25D366; }
+        .cycle-chip {
+            font-size: 0.72rem;
+            font-weight: 700;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #ccc;
+            padding: 0.15rem 0.5rem;
+            border-radius: 5px;
+        }
+
+        /* ── Form ── */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+        .admin-search-wrapper { position: relative; }
+        .badge-logininfo {
+            display: inline-block;
+            background: rgba(255,75,43,0.15);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+        .modal-section-title {
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin: 1.5rem 0 0.8rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem 1.5rem;
+            margin-top: 0.5rem;
+        }
+        @media (max-width: 540px) { .detail-grid { grid-template-columns: 1fr; } }
+        .detail-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+        }
+        .detail-item .di-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+        .detail-item .di-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        .detail-item.accent-card { background: rgba(255,65,108,0.08); border-color: rgba(255,65,108,0.3); }
+        .detail-item.accent-card .di-value { color: var(--accent); }
+
+        /* ── Pending Approvals Banner ── */
+        .approvals-banner {
+            background: linear-gradient(135deg, rgba(255,193,7,0.06), rgba(255,152,0,0.06));
+            border: 1px solid rgba(255,193,7,0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .approvals-banner h3 {
+            color: #ffc107;
+            margin: 0 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .pending-badge {
+            background: #ffc107;
+            color: #000;
+            border-radius: 20px;
+            padding: 0.1rem 0.6rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 640px) {
+            .admin-stats-grid { grid-template-columns: 1fr 1fr; }
+            .stat-value { font-size: 1.4rem; }
+            .admin-search { min-width: 160px; }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <nav class="navbar shrink">
+        <div class="logo">
+            <img src="logo.png" alt="Messify Logo" style="height: 50px; width: auto; max-width: 100%;" onerror="this.style.display='none'">
+            <a href="index.html" style="color: inherit; text-decoration: none;">Messify</a>
+        </div>
+        <div class="nav-links">
+            <button class="nav-btn theme-toggle" id="theme-icon" onclick="toggleTheme()">☀️</button>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 2rem;">
+        <div id="management-view">
+
+            <!-- ── Page Header ── -->
+            <div class="admin-page-header">
+                <div>
+                    <h2>🏠 Admin Dashboard</h2>
+                    <p>Messify Management Panel — Full control of student records</p>
+                </div>
+                <div class="admin-header-actions">
+                    <button type="button" class="btn-primary" onclick="openRegisterModal()">➕ Register Student</button>
+                    <button type="button" class="btn-secondary" onclick="handleLogout()">🚪 Logout</button>
+                </div>
+            </div>
+
+            <!-- ── Pending Payment Approvals ── -->
+            <div id="payment-approvals-section" class="hidden">
+                <div class="approvals-banner">
+                    <h3>⏳ Pending Payment Approvals <span class="pending-badge" id="pending-count">0</span></h3>
+                    <div id="payment-approvals-list" style="display:flex; flex-direction:column; gap:1rem;"></div>
+                </div>
+            </div>
+
+            <!-- ── Stats Cards ── -->
+            <div class="admin-stats-grid">
+                <div class="stat-card blue">
+                    <div class="stat-icon">🎓</div>
+                    <div>
+                        <div class="stat-label">Total Students</div>
+                        <div class="stat-value" id="admin-total">0</div>
+                        <div class="stat-sub">Enrolled members</div>
+                    </div>
+                </div>
+                <div class="stat-card pink">
+                    <div class="stat-icon">👥</div>
+                    <div>
+                        <div class="stat-label">Gender Split</div>
+                        <div class="stat-value" style="font-size:1.1rem; line-height:1.6;"><span id="admin-boys">0</span> 👦 &nbsp; <span id="admin-girls">0</span> 👧</div>
+                        <div class="stat-sub">Boys &amp; Girls</div>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">🛵</div>
+                    <div>
+                        <div class="stat-label">Tiffin Active</div>
+                        <div class="stat-value" id="admin-tiffin">0</div>
+                        <div class="stat-sub">With delivery</div>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-icon">💰</div>
+                    <div>
+                        <div class="stat-label">Fees Collected</div>
+                        <div class="stat-value" style="font-size:1.35rem;" id="admin-fees">₹0</div>
+                        <div class="stat-sub">Approved payments</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Students Table ── -->
+            <div class="table-section">
+                <div class="table-section-header">
+                    <h3>📋 All Students Record</h3>
+                    <input type="text" id="search-input" class="admin-search" placeholder="Search by name or roll..." oninput="filterTable()">
+                </div>
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Roll</th>
+                                <th>Name</th>
+                                <th>Mess Type</th>
+                                <th>Plan Expiry</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== STUDENT DETAIL MODAL ===== -->
+    <div id="detail-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width:680px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap; margin-bottom:1rem;">
+                <div>
+                    <h3 style="margin:0;">👤 <span id="modal-name"></span></h3>
+                    <p style="margin:0.3rem 0 0; color:var(--text-muted); font-size:0.9rem;">Registration details &amp; profile</p>
+                </div>
+                <div style="display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center;">
+                    <button type="button" class="btn-primary" style="margin:0; padding:0.5rem 1.2rem; background:#17a2b8; border-color:#17a2b8;" onclick="openDashFromDetail()">🎓 Open Dashboard</button>
+                    <button type="button" class="btn-primary" style="margin:0; padding:0.5rem 1.2rem;" onclick="editFromDetail()">✏️ Edit</button>
+                    <button type="button" class="btn-secondary" style="margin:0; padding:0.5rem 1rem;" onclick="closeDetailModal()">✕ Close</button>
+                </div>
+            </div>
+
+            <p class="modal-section-title">🎓 Personal Information</p>
+            <div class="detail-grid">
+                <div class="info-group">
+                    <p><strong>Roll No:</strong> <span id="modal-roll">-</span></p>
+                    <p><strong>Branch:</strong> <span id="modal-branch">-</span></p>
+                    <p><strong>Phone:</strong> <span id="modal-phone">-</span></p>
+                    <p><strong>Join Date:</strong> <span id="modal-join-date">-</span></p>
+                    <p><strong>Plan Expiry:</strong> <span id="modal-plan-expiry" style="color:var(--accent); font-weight:bold;">-</span></p>
+                </div>
+                <div class="info-group">
+                    <p><strong>Current Cycle:</strong> <span id="modal-cycle" style="font-weight:bold;">1</span></p>
+                    <p><strong>Total Days:</strong> <span id="modal-days">-</span></p>
+                    <p><strong>Effective Days:</strong> <span id="modal-eff-days">-</span></p>
+                    <p><strong>Total Leave:</strong> <span id="modal-total-leave">0 days</span></p>
+                    <p><strong>Mess Type:</strong> <span id="modal-mess">-</span></p>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; border-top: 1px solid #333; padding-top: 1rem;">
+                <h4>💳 Payment History</h4>
+                <div id="modal-payment-history" style="font-size: 0.85rem; max-height: 150px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 0.5rem;">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            
+            <div style="margin-top: 1.5rem; border-top: 1px solid #333; padding-top: 1rem;">
+                <h4>🛫 Leave History</h4>
+                <div id="modal-leave-history" style="font-size: 0.9rem; color: #ccc;">
+                    No leave history available.
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; border-top: 1px solid #333; padding-top: 1rem;">
+                <h4>📦 Delivery Details</h4>
+                <div class="info-group">
+                    <p><strong>Delivery Address:</strong> <span id="modal-address"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== EDIT STUDENT MODAL ===== -->
+    <div id="edit-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>✏️ Edit Student Details</h3>
+            <form id="edit-student-form">
+                <input type="hidden" id="edit-id">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="edit-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" id="edit-phone" placeholder="e.g. +91 9876543210">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="edit-branch">College Name / Branch</label>
+                    <input type="text" id="edit-branch" placeholder="e.g. Computer Science" title="College/Branch">
+                </div>
+
+                <p class="modal-section-title">🍽️ Mess Details</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-mess">Mess Type</label>
+                        <select id="edit-mess" title="Mess Type" aria-label="Mess Type">
+                            <option value="Veg">🥦 Veg</option>
+                            <option value="Non-Veg">🍗 Non-Veg</option>
+                            <option value="Both">🍱 Both (Veg + Non-Veg)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-tiffin">Tiffin Delivery</label>
+                        <select id="edit-tiffin" title="Tiffin Delivery" aria-label="Tiffin Delivery">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="edit-address">Delivery Address</label>
+                    <input type="text" id="edit-address" placeholder="Student delivery address">
+                </div>
+
+                <div class="form-actions modal-actions" style="margin-top: 2rem;">
+                    <button type="submit" class="btn-primary modal-btn">✅ Save Changes</button>
+                    <button type="button" class="btn-secondary modal-btn" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== REGISTER NEW STUDENT MODAL ===== -->
+    <div id="register-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>➕ Register New Student</h3>
+            <form id="register-form" onsubmit="handleAdminRegister(event)">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reg-name">Full Name</label>
+                        <input type="text" id="reg-name" placeholder="Student full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-phone">Phone Number</label>
+                        <input type="text" id="reg-phone" placeholder="e.g. +91 9876543210" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reg-branch">College Name / Branch</label>
+                        <input type="text" id="reg-branch" placeholder="e.g. Computer Science">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-roll">Roll No <span style="font-size:0.8rem;color:var(--text-muted);font-weight:400;">(Auto-assigned)</span></label>
+                        <input type="text" id="reg-roll" placeholder="Loading..." readonly style="cursor:not-allowed; opacity:0.75;">
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label for="reg-gender">Gender</label>
+                        <select id="reg-gender" title="Gender" aria-label="Gender" onchange="calcRegFee()">
+                            <option value="male">Male (Boys Hostel ₹3,000)</option>
+                            <option value="female">Female (Girls Hostel ₹2,800)</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <p class="modal-section-title">🍽️ Mess Details</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reg-messtype">Mess Type</label>
+                        <select id="reg-messtype" title="Mess Type" aria-label="Mess Type">
+                            <option value="Veg">🥦 Veg</option>
+                            <option value="Non-Veg">🍗 Non-Veg</option>
+                            <option value="Both">🍱 Both (Veg + Non-Veg)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-tiffin">Tiffin Delivery</label>
+                        <select id="reg-tiffin" title="Tiffin Delivery" aria-label="Tiffin Delivery" onchange="calcRegFee()">
+                            <option value="no">No (Dine In)</option>
+                            <option value="yes">Yes (+₹500/month)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reg-address">Delivery Address</label>
+                    <input type="text" id="reg-address" placeholder="Delivery address (if tiffin)">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reg-month">Billing Month</label>
+                        <input type="month" id="reg-month" title="Billing Month">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Fee (Auto-Calculated)</label>
+                        <div id="reg-fee-display" style="padding: 1rem 1.3rem; background: rgba(255,65,108,0.08); border: 1px solid rgba(255,65,108,0.3); border-radius: 12px; font-size: 1.3rem; font-weight: 700; color: var(--accent); text-align: center; letter-spacing: 1px;">₹3,000</div>
+                        <input type="hidden" id="reg-fee">
+                        <small style="color: var(--text-muted); font-size: 0.8rem;">Boys ₹3,000 | Girls ₹2,800 | + ₹500 Tiffin</small>
+                    </div>
+                </div>
+
+                <div id="reg-credentials-display" class="hidden" style="margin-top: 1rem;">
+                    <p class="modal-section-title">🔐 Generated Login Credentials</p>
+                    <div class="badge-logininfo" id="reg-cred-box"></div>
+                </div>
+
+                <div class="form-actions modal-actions" style="margin-top: 2rem;">
+                    <button type="submit" class="btn-primary modal-btn" id="reg-submit-btn">Register Student</button>
+                    <button type="button" class="btn-secondary modal-btn" onclick="closeRegisterModal()">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = (window.location.protocol === 'file:' || window.location.port === '5500') 
+            ? 'http://localhost:3000' 
+            : '';
+
+
+        let allStudentsData = [];
+
+        // ---- FEE CALCULATION ----
+        function calcEditFee() {
+            // This function is no longer used for the simplified edit modal
+            // Keeping it for potential future use or if other parts of the app still rely on it.
+            const gender = document.getElementById('edit-gender').value;
+            const tiffin = document.getElementById('edit-tiffin').value;
+            let total = gender === 'male' ? 3000 : gender === 'female' ? 2800 : 0;
+            if (tiffin === 'yes' && total > 0) total += 500;
+            const formatted = total > 0 ? '₹' + total.toLocaleString('en-IN') : '₹0';
+            // document.getElementById('edit-fee-display').innerText = formatted; // Removed from HTML
+            // document.getElementById('edit-fee').value = formatted; // Removed from HTML
+        }
+
+        function calcRegFee() {
+            const gender = document.getElementById('reg-gender').value;
+            const tiffin = document.getElementById('reg-tiffin').value;
+            let total = gender === 'male' ? 3000 : gender === 'female' ? 2800 : 0;
+            if (tiffin === 'yes' && total > 0) total += 500;
+            const formatted = total > 0 ? '₹' + total.toLocaleString('en-IN') : '₹0';
+            document.getElementById('reg-fee-display').innerText = formatted;
+            document.getElementById('reg-fee').value = formatted;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('adminRole') !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+            fetchStudents();
+        });
+
+        async function fetchStudents() {
+            try {
+                const response = await fetch(`${API_BASE}/students`);
+                if (!response.ok) throw new Error("Failed to fetch");
+                const students = await response.json();
+                renderAdminDashboard(students);
+            } catch(e) {
+                console.error(e);
+                alert("⚠️ Could not connect to backend. Make sure node server.js is running.");
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            document.getElementById('theme-icon').innerText = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
+        }
+
+        function handleLogout() {
+            sessionStorage.removeItem('adminRole');
+            window.location.href = 'index.html';
+        }
+
+        function getAttCount(student, status) {
+            if (!student || !student.attendance) return 0;
+            return Object.values(student.attendance).filter(v => v === status).length;
+        }
+
+        function filterTable() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const rows = document.querySelectorAll('#admin-table-body tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        function renderAdminDashboard(students) {
+            allStudentsData = students || [];
+
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = '';
+
+            let boys = 0, girls = 0, tiffinCount = 0, totalFees = 0;
+
+            if (!allStudentsData.length) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--text-muted);">No students registered yet.</td></tr>';
+            }
+
+            allStudentsData.forEach(s => {
+                if (s.gender === 'male') boys++;
+                if (s.gender === 'female') girls++;
+                if (s.tiffinDelivery === 'yes') tiffinCount++;
+                const feeInt = parseInt((s.totalCalculatedFee || '0').replace(/[^0-9]/g, '')) || 0;
+                if (s.paymentStatus === 'Paid') totalFees += feeInt;
+
+                const payStatusClass = (s.paymentStatus || 'Pending').toLowerCase().replace(/ /g, '.');
+
+                // Mess badge color
+                const messLower = (s.messType || '').toLowerCase();
+                const messCls = messLower.includes('non') ? 'mess-nonveg' : messLower === 'both' ? 'mess-both' : 'mess-veg';
+                const messEmoji = messLower.includes('non') ? '🍗' : messLower === 'both' ? '🍱' : '🥦';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="roll-badge">${s.roll || '-'}</span></td>
+                    <td>
+                        <span class="student-name-link" onclick="viewStudentDetails('${s.id}')">${s.name || '-'}</span>
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.1rem;">${s.branch || ''}</div>
+                    </td>
+                    <td><span class="mess-badge ${messCls}">${messEmoji} ${s.messType || '-'}</span></td>
+                    <td style="font-size:0.87rem;">${s.planExpiry || 'N/A'}</td>
+                    <td><span class="status-badge status-${payStatusClass}">${s.paymentStatus || 'Pending'}</span></td>
+                    <td>
+                        <div class="tbl-action-group">
+                            <button class="tbl-btn view" title="View Details" onclick="viewStudentDetails('${s.id}')">👁️</button>
+                            <button class="tbl-btn edit" title="Edit Student" onclick="openEditModal('${s.id}')">✏️</button>
+                            <span class="cycle-chip">C${s.currentCycle || 1}</span>
+                            ${s.phone ? `<button class="tbl-btn wa" title="WhatsApp Reminder" onclick="sendWhatsApp('${s.phone}', 'Hello ${s.name}, your Cycle ${s.currentCycle || 1} payment is due. Please renew your subscription.')">💬</button>` : ''}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('admin-total').innerText = allStudentsData.length;
+            document.getElementById('admin-boys').innerText = boys;
+            document.getElementById('admin-girls').innerText = girls;
+            document.getElementById('admin-tiffin').innerText = tiffinCount;
+            document.getElementById('admin-fees').innerText = '₹' + totalFees.toLocaleString('en-IN');
+
+            renderPaymentApprovals();
+        }
+
+        function renderPaymentApprovals() {
+            const pending = allStudentsData.filter(s => s.paymentStatus === 'Pending Approval' && s.paymentProof);
+            const section = document.getElementById('payment-approvals-section');
+            const list = document.getElementById('payment-approvals-list');
+            const countBadge = document.getElementById('pending-count');
+
+            if (!pending.length) {
+                section.classList.add('hidden');
+                return;
+            }
+
+            section.classList.remove('hidden');
+            countBadge.innerText = pending.length;
+            list.innerHTML = '';
+
+            pending.forEach(s => {
+                const card = document.createElement('div');
+                card.style.cssText = 'background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.2rem; display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap;';
+                card.innerHTML = `
+                    <div style="flex:1; min-width: 200px;">
+                        <p style="margin:0 0 0.3rem;"><strong>👤 ${s.name || '-'}</strong> &nbsp; <span style="color:var(--text-muted); font-size:0.9rem;">${s.roll || ''}</span></p>
+                        <p style="margin:0 0 0.3rem; color: #ffc107; font-weight: bold;">Cycle to Pay: Cycle ${s.pendingCycle || s.currentCycle || 1}</p>
+                        <p style="margin:0 0 0.3rem; color:var(--text-muted); font-size:0.9rem;">Fee: ${s.totalCalculatedFee || 'N/A'} &nbsp;|&nbsp; Submitted: ${s.proofSubmittedAt || 'N/A'}</p>
+
+                        <div style="display:flex; gap: 0.8rem; margin-top: 1rem; flex-wrap:wrap;">
+                            <button type="button" class="btn-primary" style="margin:0; padding:0.4rem 1.2rem; background:#28a745; border-color:#28a745;" onclick="approvePayment('${s.id}')">✅ Approve</button>
+                            <button type="button" class="btn-secondary" style="margin:0; padding:0.4rem 1.2rem; color:#ff5555; border-color:#dc3545;" onclick="rejectPayment('${s.id}')">❌ Reject</button>
+                        </div>
+                    </div>
+                    <div style="flex-shrink:0;">
+                        <p style="margin:0 0 0.5rem; font-size:0.85rem; color:var(--text-muted);">Payment Proof:</p>
+                        <img src="${s.paymentProof}" alt="Payment proof" style="max-width:180px; max-height:180px; border-radius:8px; border:1px solid var(--glass-border); object-fit:contain; background:#fff; cursor:pointer;" onclick="this.requestFullscreen && this.requestFullscreen()">
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        async function approvePayment(id) {
+            if (!confirm('Approve this payment?')) return;
+            try {
+                const res = await fetch(`${API_BASE}/approve-payment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+                const result = await res.json();
+                if (res.ok) {
+                    alert('✅ Payment approved! Student can now generate their receipt.');
+                    renderAdminDashboard(result.students);
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch(e) {
+                alert('⚠️ Network error.');
+            }
+        }
+
+        async function rejectPayment(id) {
+            const reason = prompt('Enter rejection reason (will be shown to student):') || 'Proof unclear. Please resubmit.';
+            try {
+                const res = await fetch(`${API_BASE}/reject-payment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, reason })
+                });
+                const result = await res.json();
+                if (res.ok) {
+                    alert('❌ Payment rejected. Student has been notified.');
+                    renderAdminDashboard(result.students);
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch(e) {
+                alert('⚠️ Network error.');
+            }
+        }
+
+
+        // ---- STUDENT DETAIL MODAL ----
+        let currentDetailId = null;
+
+        function viewStudentDetails(id) {
+            const s = allStudentsData.find(st => st.id === id);
+            if (!s) return;
+            currentDetailId = id;
+
+            document.getElementById('modal-name').innerText = s.name || '-';
+            document.getElementById('modal-roll').innerText = s.roll || '-';
+            document.getElementById('modal-branch').innerText = s.branch || '-';
+            document.getElementById('modal-phone').innerText = s.phone || 'N/A';
+            document.getElementById('modal-join-date').innerText = s.joinDate || 'N/A';
+            document.getElementById('modal-plan-expiry').innerText = s.planExpiry || 'N/A';
+            document.getElementById('modal-cycle').innerText = s.currentCycle || '1';
+            document.getElementById('modal-days').innerText = (s.totalDaysCompleted || 0) + ' days';
+            document.getElementById('modal-eff-days').innerText = (s.effectiveDays || 0) + ' effective days';
+            document.getElementById('modal-total-leave').innerText = (s.totalLeaveDays || 0) + ' days';
+            
+            document.getElementById('modal-mess').innerText = s.messType || '-';
+            // document.getElementById('modal-tiffin').innerText = s.tiffinDelivery === 'yes' ? 'Yes' : 'No';
+            document.getElementById('modal-address').innerText = s.deliveryAddress || 'No address provided';
+
+            // Payment History Render
+            const payHistoryDiv = document.getElementById('modal-payment-history');
+            if (s.payments && s.payments.length > 0) {
+                payHistoryDiv.innerHTML = s.payments.map(p => `
+                    <div style="display:flex; justify-content:space-between; padding:0.4rem; border-bottom:1px solid rgba(255,255,255,0.05);">
+                        <span>Cycle ${p.cycle}</span>
+                        <span>${p.paidAt.split(',')[0]}</span>
+                        <span style="color:#28a745; font-weight:bold;">₹${p.amount}</span>
+                    </div>
+                `).join('');
+            } else {
+                payHistoryDiv.innerHTML = '<p style="margin:0; opacity:0.5; text-align:center;">No payment records.</p>';
+            }
+
+            // Leave History Render
+            const historyDiv = document.getElementById('modal-leave-history');
+            if (s.leaveHistory && s.leaveHistory.length > 0) {
+                historyDiv.innerHTML = s.leaveHistory.map(l => `
+                    <div style="background: rgba(255,255,255,0.05); padding: 0.5rem; border-radius: 4px; margin-bottom: 0.5rem; font-size:0.8rem;">
+                        <strong>${l.startDate} to ${l.endDate}</strong> (${l.days}d) - ${l.status}
+                    </div>
+                `).join('');
+            } else {
+                historyDiv.innerHTML = 'No leave history available.';
+            }
+
+
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+            currentDetailId = null;
+        }
+
+        function editFromDetail() {
+            const id = currentDetailId;
+            closeDetailModal();
+            if (id) openEditModal(id);
+        }
+
+        function openDashFromDetail() {
+            if (currentDetailId) {
+                const s = allStudentsData.find(st => st.id === currentDetailId);
+                if (s) {
+                    sessionStorage.setItem('currentStudent', JSON.stringify(s));
+                    window.open('studentDashboard.html', '_blank');
+                }
+            }
+        }
+
+        function sendWhatsApp(phone, message) {
+            const encodedMsg = encodeURIComponent(message);
+            window.open(`https://wa.me/${phone.replace(/\D/g,'')}?text=${encodedMsg}`, '_blank');
+        }
+
+        // ---- EDIT STUDENT ----
+        function openEditModal(id) {
+            const student = allStudentsData.find(s => s.id === id);
+            if (!student) return;
+
+            document.getElementById('edit-id').value = student.id;
+            document.getElementById('edit-name').value = student.name || '';
+            document.getElementById('edit-phone').value = student.phone || '';
+            document.getElementById('edit-branch').value = student.branch || '';
+            document.getElementById('edit-mess').value = student.messType || '';
+            document.getElementById('edit-tiffin').value = student.tiffinDelivery || 'no';
+            document.getElementById('edit-address').value = student.deliveryAddress || '';
+
+            document.getElementById('edit-modal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+        }
+
+        document.getElementById('edit-student-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const original = btn.innerText;
+            btn.innerText = "Saving...";
+            btn.disabled = true;
+
+            const updatedStudent = {
+                id: document.getElementById('edit-id').value,
+                name: document.getElementById('edit-name').value,
+                phone: document.getElementById('edit-phone').value,
+                branch: document.getElementById('edit-branch').value,
+                messType: document.getElementById('edit-mess').value,
+                tiffinDelivery: document.getElementById('edit-tiffin').value,
+                password: document.getElementById('edit-password').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/update-student`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedStudent)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert("✅ " + result.message);
+                    renderAdminDashboard(result.students);
+                    closeEditModal();
+                } else {
+                    alert("❌ " + result.message);
+                }
+            } catch(err) {
+                console.error(err);
+                alert("⚠️ Error saving to backend.");
+            } finally {
+                btn.innerText = original;
+            }
+        }
+
+        // ---- REGISTER NEW STUDENT ----
+        async function loadNextRollNumber() {
+            try {
+                const res = await fetch(`${API_BASE}/next-roll`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const rollInput = document.getElementById('reg-roll');
+                    if (rollInput) {
+                        rollInput.value = data.nextRoll;
+                        rollInput.placeholder = data.nextRoll;
+                    }
+                }
+            } catch(e) {
+                const rollInput = document.getElementById('reg-roll');
+                if (rollInput) rollInput.placeholder = 'Server offline';
+            }
+        }
+
+        async function reassignRolls() {
+            if (!confirm('This will renumber ALL students sequentially (1, 2, 3...) in their original registration order. Continue?')) return;
+            try {
+                const res = await fetch(`${API_BASE}/reassign-rolls`, { method: 'POST' });
+                const result = await res.json();
+                if (res.ok) {
+                    alert('✅ Roll numbers reassigned successfully!');
+                    renderAdminDashboard(result.students);
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch(e) {
+                alert('⚠️ Network error.');
+            }
+        }
+
+        function openRegisterModal() {
+            document.getElementById('register-form').reset();
+            document.getElementById('reg-credentials-display').classList.add('hidden');
+            document.getElementById('reg-submit-btn').innerText = 'Register Student';
+            document.getElementById('reg-submit-btn').disabled = false;
+            document.getElementById('register-modal').classList.remove('hidden');
+            loadNextRollNumber(); // Auto-populate next roll number
+        }
+
+        function closeRegisterModal() {
+            document.getElementById('register-modal').classList.add('hidden');
+        }
+
+        async function handleAdminRegister(event) {
+            event.preventDefault();
+            const btn = document.getElementById('reg-submit-btn');
+            const original = btn.innerText;
+            btn.innerText = "Registering...";
+            btn.disabled = true;
+
+            // Roll number is assigned by server; do NOT send it from client
+            const formData = {
+                name: document.getElementById('reg-name').value,
+                phone: document.getElementById('reg-phone').value,
+                branch: document.getElementById('reg-branch').value,
+                gender: document.getElementById('reg-gender').value,
+                messType: document.getElementById('reg-messtype').value,
+                tiffinDelivery: document.getElementById('reg-tiffin').value,
+                deliveryAddress: document.getElementById('reg-address').value,
+                totalCalculatedFee: document.getElementById('reg-fee').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    const credBox = document.getElementById('reg-cred-box');
+                    credBox.innerHTML = `📋 <strong>Roll No:</strong> ${result.roll}<br>📋 <strong>Login ID:</strong> ${result.loginId}<br>🔑 <strong>Password:</strong> ${result.password}`;
+                    document.getElementById('reg-credentials-display').classList.remove('hidden');
+                    btn.innerText = "✅ Registered!";
+                    // Refresh the student table
+                    fetchStudents();
+                } else {
+                    alert("❌ Registration failed. " + result.message);
+                    btn.innerText = original;
+                    btn.disabled = false;
+                }
+            } catch(err) {
+                console.error(err);
+                alert("⚠️ Could not connect to backend.");
+                btn.innerText = original;
+                btn.disabled = false;
+            }
+        }
+    </script>
+    <!-- ===== WHATSAPP ORDER BUTTON ===== -->
+    <style>
+        .wa-float-btn {
+            position: fixed;
+            bottom: 6.5rem; /* Consistent placement across pages */
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: #25D366;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+            z-index: 9996;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: wa-pulse 2s infinite;
+        }
+        .wa-float-btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.6);
+            color: #fff;
+        }
+        .wa-tooltip-text {
+            position: absolute;
+            right: 75px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #11111a;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(37,211,102,0.3);
+            font-size: 0.85rem;
+            font-weight: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .wa-float-btn:hover .wa-tooltip-text {
+            opacity: 1;
+            transform: translateY(-50%) translateX(-5px);
+        }
+        @keyframes wa-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+        @media (max-width: 480px) {
+            .wa-float-btn {
+                bottom: 5.5rem;
+                right: 1.2rem;
+                width: 55px;height: 55px;
+            }
+            .wa-tooltip-text { display: none; }
+        }
+    </style>
+    <a href="https://wa.me/917620680450?text=Hi%2C%20I%20want%20to%3A%0A1.%20See%20mess%20plans%0A2.%20Order%20today%E2%80%99s%20food%0A3.%20Monthly%20tiffin%0APlease%20help." 
+       class="wa-float-btn" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       title="Order Now on WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="32" height="32" fill="currentColor">
+            <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157.1zM223.9 414.7c-33 0-65.3-8.9-93.6-25.7l-6.7-4-69.5 18.2 18.5-67.7-4.4-7c-18.4-29.3-28.1-63.5-28.1-98.5 0-101.9 83-184.9 184.9-184.9 49.3 0 95.8 19.3 130.8 54.2 34.8 35 54 81.3 54 130.8 0 102.1-83.3 184.6-184.9 184.6zM324.8 276.7c-5.5-2.8-32.8-16.2-37.9-18.1-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18.1-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-2.1-3.6 2.1-3.6 7.4-14 2.8-5.6 1.4-10.4-.5-13.4-1.9-3.2-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+        </svg>
+        <span class="wa-tooltip-text">Order Now on WhatsApp</span>
+    </a>
+</body>
+</html>
